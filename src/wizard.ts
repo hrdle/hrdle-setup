@@ -14,31 +14,59 @@
 // that changes voice at the boundary is worse than either version alone.
 
 import { BRAND_CSS, brandIcon } from './brand.ts'
+import { settingsPanelHtml } from './settings-ui.ts'
 import { BINARY_NAME, DEFAULT_PORT, INSTALL_CMD, PRODUCT_NAME, REPO } from './identity.ts'
 import { type Lang, getLang, setLang, t } from './i18n.ts'
 
-export type StepId = 'intro' | 'machine' | 'agent' | 'tailscale' | 'install' | 'outro'
+export type StepId =
+  | 'intro'
+  | 'machine'
+  | 'agent'
+  | 'tailscale'
+  | 'install'
+  | 'outro'
+  | 'connect'
+  | 'done'
 
 interface Step {
   id: StepId
   where: 'machine' | 'phone'
 }
 
-export const STEPS: readonly Step[] = [
+const PREPARATION: readonly Step[] = [
   { id: 'intro', where: 'phone' },
   { id: 'machine', where: 'machine' },
   { id: 'agent', where: 'machine' },
   { id: 'tailscale', where: 'machine' },
   { id: 'install', where: 'machine' },
-  { id: 'outro', where: 'phone' },
 ]
 
+/**
+ * Which screens exist depends on who is reading.
+ *
+ * Opened as a page there is no host, so connecting is impossible — the address
+ * would have nowhere to go that the glasses can see. That reader gets the
+ * preparation and a hand-off. Framed by the app, the last two screens are real
+ * and the hand-off would be telling someone to go where they already are.
+ */
+let embedded = false
+
+export function setEmbedded(value: boolean): void {
+  embedded = value
+}
+
+export function steps(): readonly Step[] {
+  return embedded
+    ? [...PREPARATION, { id: 'connect', where: 'phone' } as const, { id: 'done', where: 'phone' } as const]
+    : [...PREPARATION, { id: 'outro', where: 'phone' } as const]
+}
+
 export function stepIndex(id: StepId): number {
-  return STEPS.findIndex((s) => s.id === id)
+  return steps().findIndex((s) => s.id === id)
 }
 
 export function parseStep(value: string | null): StepId {
-  return STEPS.some((s) => s.id === value) ? (value as StepId) : 'intro'
+  return steps().some((s) => s.id === value) ? (value as StepId) : 'intro'
 }
 
 // ── Markup helpers ──
@@ -187,6 +215,57 @@ function screenHtml(id: StepId): { title: string; html: string } {
         `,
       }
 
+    case 'connect':
+      return {
+        title: t('connect.title', { product }),
+        html: `
+          <p class="wiz-lead">${t('connect.lead')}</p>
+          <div class="wiz-card">
+            <h3>${t('connect.tailscaleTitle')}</h3>
+            ${linkButton('https://play.google.com/store/apps/details?id=com.tailscale.ipn', 'Google Play')}
+            ${linkButton('https://apps.apple.com/app/tailscale/id1470499037', 'App Store')}
+            <p class="wiz-note">${t('connect.tailscaleNote')}</p>
+            ${cmd('https://tailscale.com/download')}
+          </div>
+          <div class="wiz-card">
+            <h3>${t('connect.scanTitle')}</h3>
+            <p class="wiz-note">${t('connect.scanNote')}</p>
+            ${cmd(`${binary} qr`)}
+            <button type="button" class="wiz-scan" id="wiz-scan">${t('connect.scanButton')}</button>
+            <div id="wiz-scan-status" class="wiz-status" style="margin:0 0 6px"></div>
+            <div class="wiz-or">${t('connect.orType')}</div>
+            <input id="wiz-url" class="wiz-input" type="url" inputmode="url" autocapitalize="off"
+                   autocorrect="off" spellcheck="false"
+                   placeholder="https://your-machine.tailnet.ts.net:${DEFAULT_PORT}" />
+          </div>
+          <div id="wiz-connect-status" class="wiz-status"></div>
+          <div class="wiz-card" style="margin-top:14px">
+            <h3>${t('connect.troubleTitle')}</h3>
+            <p class="wiz-note">${t('connect.trouble', { binary })}</p>
+          </div>
+        `,
+      }
+
+    case 'done':
+      return {
+        title: t('done.title'),
+        html: `
+          <div class="wiz-card" style="border-color:#1a3a1a; background:#0a1a0a">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px">
+              <div class="wiz-dot"></div>
+              <h3 class="wiz-ok" style="margin:0">${t('done.connected')}</h3>
+            </div>
+            <div id="wiz-server" class="wiz-kv"></div>
+          </div>
+          <div class="wiz-card">
+            <h3>${t('done.launchTitle')}</h3>
+            <p>${t('done.launch', { product })}</p>
+          </div>
+          ${settingsPanelHtml()}
+          <button type="button" class="wiz-ghost wiz-wide" id="wiz-disconnect">${t('done.disconnect')}</button>
+        `,
+      }
+
     case 'outro':
       return {
         title: t('outro.title'),
@@ -281,25 +360,44 @@ const CSS = `
   .wiz-linkbtn { display:block; text-align:center; padding:12px; border-radius:9px;
                  border:1px solid #5a2226; background:#180c0d; color:#ff8a8f;
                  text-decoration:none; font-size:14px; font-weight:600; margin:8px 0; }
+  .wiz-scan { display:block; width:100%; padding:13px; border-radius:9px; border:1px solid #5a2226;
+              background:#180c0d; color:#ff8a8f; font-size:14px; font-weight:600; cursor:pointer;
+              margin:0 0 10px; }
+  .wiz-scan[disabled] { opacity:.55; }
+  .wiz-or { display:flex; align-items:center; gap:10px; color:#666; font-size:11px; margin:2px 0 10px; }
+  .wiz-or::before, .wiz-or::after { content:''; flex:1; height:1px; background:#242424; }
+  .wiz-input { width:100%; padding:12px; border-radius:8px; border:1px solid #333; background:#1a1a1a;
+               color:#eee; font-size:14px; font-family:ui-monospace, Menlo, monospace; }
+  .wiz-input:focus { outline:none; border-color:#e0353c; }
+  .wiz-status { font-size:13px; margin-top:10px; min-height:18px; }
+  .wiz-wide { display:block; width:100%; margin:4px 0 12px; }
+  .wiz-ok { color:#4ade80; }
+  .wiz-dot { width:9px; height:9px; border-radius:50%; background:#4ade80; animation:wiz-pulse 2s infinite; }
+  @keyframes wiz-pulse { 0%,100% { opacity:1 } 50% { opacity:.35 } }
 `
 
 export function shellHtml(id: StepId): string {
-  const step = STEPS[stepIndex(id)]
+  const list = steps()
   const index = stepIndex(id)
+  const step = list[index]
   const { title, html } = screenHtml(id)
-  const pct = Math.round(((index + 1) / STEPS.length) * 100)
+  const pct = Math.round(((index + 1) / list.length) * 100)
   const where = step.where === 'machine' ? t('nav.onMachine') : t('nav.onPhone')
 
   const back =
     index > 0
       ? `<button type="button" class="wiz-ghost" id="wiz-back">${t('nav.back')}</button>`
       : ''
+  // The connect screen's action is connecting, and the last screen has nowhere
+  // to go — so neither carries a "next".
   const next =
-    index < STEPS.length - 1
-      ? `<button type="button" class="wiz-primary" id="wiz-next">${
-          index === 0 ? t('nav.start') : t('nav.next')
-        }</button>`
-      : ''
+    id === 'connect'
+      ? `<button type="button" class="wiz-primary" id="wiz-connect">${t('connect.connectButton')}</button>`
+      : index < list.length - 1
+        ? `<button type="button" class="wiz-primary" id="wiz-next">${
+            index === 0 ? t('nav.start') : t('nav.next')
+          }</button>`
+        : ''
 
   const langs = (['en', 'ja'] as const)
     .map(
@@ -320,7 +418,7 @@ export function shellHtml(id: StepId): string {
         </div>
         <div class="wiz-bar"><i style="width:${pct}%"></i></div>
         <div class="wiz-meta">
-          <span>${t('nav.step', { n: index + 1, total: STEPS.length, label: t(`step.${id}`) })}</span>
+          <span>${t('nav.step', { n: index + 1, total: list.length, label: t(`step.${id}`) })}</span>
           <span class="wiz-where ${step.where}">${where}</span>
         </div>
       </div>
@@ -328,7 +426,7 @@ export function shellHtml(id: StepId): string {
         <h1 class="wiz-title">${title}</h1>
         ${html}
       </div>
-      ${back || next ? `<div class="wiz-foot">${back}${next}</div>` : ''}
+      ${id === 'done' || !(back || next) ? '' : `<div class="wiz-foot">${back}${next}</div>`}
     </div>
     <style>${CSS}${BRAND_CSS}</style>
   `

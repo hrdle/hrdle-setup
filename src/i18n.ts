@@ -55,6 +55,8 @@ const EN: Table = {
   'step.agent': 'Coding agent',
   'step.tailscale': 'Tailscale',
   'step.install': 'Install',
+  'step.connect': 'Connect',
+  'step.done': 'Glasses',
   'step.outro': 'Finish in the app',
 
   'intro.title': 'What {product} is',
@@ -235,6 +237,8 @@ const JA: Table = {
   'step.agent': 'エージェント',
   'step.tailscale': 'Tailscale',
   'step.install': 'インストール',
+  'step.connect': '接続',
+  'step.done': 'グラス',
   'step.outro': 'アプリで仕上げる',
 
   'intro.title': '{product} とは',
