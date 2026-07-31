@@ -20,6 +20,7 @@ import { type Lang, getLang, setLang, t } from './i18n.ts'
 
 export type StepId =
   | 'intro'
+  | 'how'
   | 'machine'
   | 'agent'
   | 'tailscale'
@@ -35,6 +36,7 @@ interface Step {
 
 const PREPARATION: readonly Step[] = [
   { id: 'intro', where: 'phone' },
+  { id: 'how', where: 'phone' },
   { id: 'machine', where: 'machine' },
   { id: 'agent', where: 'machine' },
   { id: 'tailscale', where: 'machine' },
@@ -83,6 +85,73 @@ function linkButton(href: string, label: string): string {
   return `<a class="wiz-linkbtn" href="${href}" target="_blank" rel="noreferrer">${label}</a>`
 }
 
+/**
+ * A device, drawn small.
+ *
+ * Line art rather than emoji: the repository bans emoji outside two functional
+ * cases, and more usefully these have to sit on a dark panel at 26px and still
+ * read as *which* device. A screen, a phone and a pair of glasses is all the
+ * detail that survives at that size.
+ */
+function glyph(kind: 'machine' | 'phone' | 'glasses'): string {
+  const common = 'fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"'
+  const inner =
+    kind === 'machine'
+      ? `<rect x="2.5" y="3.5" width="19" height="13" rx="1.8" ${common}/>
+         <path d="M8.5 20.5h7M12 16.5v4" ${common} stroke-linecap="round"/>`
+      : kind === 'phone'
+        ? `<rect x="6.5" y="2.5" width="11" height="19" rx="2.4" ${common}/>
+           <path d="M10.5 18.5h3" ${common} stroke-linecap="round"/>`
+        : `<rect x="1.5" y="8.5" width="8.5" height="7" rx="2" ${common}/>
+           <rect x="14" y="8.5" width="8.5" height="7" rx="2" ${common}/>
+           <path d="M10 11.5h4" ${common} stroke-linecap="round"/>`
+  return `<svg class="net-glyph" viewBox="0 0 24 24" aria-hidden="true">${inner}</svg>`
+}
+
+/** One box in the diagram. `inside` nests a second frame within it. */
+function node(
+  kind: 'machine' | 'phone' | 'glasses',
+  title: string,
+  note: string,
+  inside = '',
+): string {
+  return `<div class="net-node${inside ? ' tall' : ''}">
+    <div class="net-head">${glyph(kind)}<div class="net-text"><b>${title}</b><span>${note}</span></div></div>
+    ${inside}
+  </div>`
+}
+
+/**
+ * What sits inside the machine.
+ *
+ * Drawn rather than described because it is the part people do not expect: the
+ * agents are not each in their own box reporting upward, they are side by side
+ * inside one thing, and that is what makes one able to drive another. A
+ * paragraph saying so reads as a feature list; a frame around four names reads
+ * as an arrangement.
+ */
+function agentsInside(): string {
+  const names = ['Claude Code', 'Codex', 'Grok', 'Kimi']
+  return `<div class="net-inner">
+    <div class="net-inner-top">${t('how.herdr')}</div>
+    <div class="net-agents">${names.map((n) => `<span>${n}</span>`).join('')}</div>
+    <div class="net-inner-note">${t('how.agents')}</div>
+  </div>`
+}
+
+/**
+ * The gap between two boxes, with the line running through the middle of it.
+ *
+ * The first version put a thin rule down the left margin beside a paragraph, and
+ * it did not read as a diagram at all — it read as three cards with notes
+ * between them, which is what it was. A line that leaves the box it came from
+ * and enters the next one is the whole difference.
+ */
+function hop(label: string, sub: string, wan: boolean): string {
+  const wire = `<span class="net-wire${wan ? ' wan' : ''}"></span>`
+  return `<div class="net-hop">${wire}<span class="net-label"><b>${label}</b>${sub}</span>${wire}</div>`
+}
+
 function screenHtml(id: StepId): { title: string; html: string } {
   const product = PRODUCT_NAME
   const binary = BINARY_NAME
@@ -90,35 +159,26 @@ function screenHtml(id: StepId): { title: string; html: string } {
   switch (id) {
     case 'intro':
       return {
-        title: t('intro.title', { product }),
+        title: t('intro.title'),
         html: `
           <div class="wiz-hero">${brandIcon('hero', 132)}</div>
-          <p class="wiz-lead">${t('intro.lead', { product })}</p>
-          <div class="wiz-net">
-            <div class="wiz-net-box">
-              <b>${t('intro.net.machine')}</b>
-              <span>${t('intro.net.machineDesc', { product })}</span>
-            </div>
-            <div class="wiz-net-hop">
-              <div class="wiz-net-wire wan"></div>
-              <p>${t('intro.net.tailscale')}</p>
-            </div>
-            <div class="wiz-net-box here">
-              <b>${t('intro.net.phone')}</b>
-              <span>${t('intro.net.phoneDesc', { product })}</span>
-            </div>
-            <div class="wiz-net-hop">
-              <div class="wiz-net-wire"></div>
-              <p>${t('intro.net.bluetooth')}</p>
-            </div>
-            <div class="wiz-net-box here">
-              <b>${t('intro.net.glasses')}</b>
-              <span>${t('intro.net.glassesDesc')}</span>
-            </div>
+          <p class="wiz-lead">${t('intro.lead')}</p>
+          <div class="wiz-card">
+            <h3>${t('intro.stillTitle')}</h3>
+            <p>${t('intro.still')}</p>
           </div>
           <div class="wiz-card">
-            <h3>${t('intro.getTitle')}</h3>
-            <ul class="wiz-points">
+            <h3>${t('intro.problemTitle')}</h3>
+            <p>${t('intro.problem')}</p>
+          </div>
+          <div class="wiz-card wiz-warn">
+            <h3>${t('intro.answerTitle', { product })}</h3>
+            <p>${t('intro.answer')}</p>
+          </div>
+          <div class="wiz-card">
+            <h3>${t('intro.whatTitle')}</h3>
+            <p>${t('intro.what', { product })}</p>
+            <ul class="wiz-points" style="margin-top:10px">
               <li>${t('intro.get1')}</li>
               <li>${t('intro.get2')}</li>
               <li>${t('intro.get3')}</li>
@@ -127,6 +187,41 @@ function screenHtml(id: StepId): { title: string; html: string } {
           </div>
           <p class="wiz-note">${t('intro.time')}</p>
           <p class="wiz-note">${t('intro.openOnDesktop')}</p>
+        `,
+      }
+
+    case 'how':
+      return {
+        title: t('how.title'),
+        html: `
+          <p class="wiz-lead">${t('how.lead')}</p>
+          <div class="net">
+            ${node('machine', t('intro.net.machine'), t('intro.net.machineDesc', { product }), agentsInside())}
+            ${hop(t('intro.net.tailscale'), t('intro.net.tailscaleWire'), true)}
+            ${node('phone', t('intro.net.phone'), t('intro.net.phoneDesc', { product }))}
+            ${hop(t('intro.net.bluetooth'), t('intro.net.bluetoothWire'), false)}
+            ${node('glasses', t('intro.net.glasses'), t('intro.net.glassesDesc'))}
+          </div>
+          <div class="wiz-card wiz-warn">
+            <h3>${t('how.dogfoodTitle')}</h3>
+            <p>${t('how.dogfood')}</p>
+          </div>
+          <div class="wiz-card">
+            <h3>${t('how.freeTitle')}</h3>
+            <p>${t('how.free')}</p>
+          </div>
+          <div class="wiz-card">
+            <h3>${t('how.closingTitle')}</h3>
+            <p>${t('how.closing')}</p>
+          </div>
+          <div class="wiz-card">
+            <h3>Tailscale</h3>
+            <p>${t('intro.net.tailscaleNote')}</p>
+          </div>
+          <div class="wiz-card">
+            <h3>${t('intro.net.machine')}</h3>
+            <p>${t('intro.net.machineNote')}</p>
+          </div>
         `,
       }
 
@@ -339,16 +434,56 @@ const CSS = `
               color:#e8a0a0; background:#1a1414; padding:1px 5px; border-radius:4px; }
   .wiz-kv { display:grid; grid-template-columns:auto 1fr; gap:5px 12px; font-size:13px; color:#ccc; }
   .wiz-kv span:nth-child(odd) { color:#888; }
-  .wiz-net { margin:0 0 16px; }
-  .wiz-net-box { background:#111; border:1px solid #262626; border-radius:10px; padding:11px 13px; }
-  .wiz-net-box b { display:block; font-size:13.5px; color:#eee; margin-bottom:3px; }
-  .wiz-net-box span { display:block; font-size:12px; color:#8d8d8d; line-height:1.55; }
-  .wiz-net-box.here { border-color:#5a2226; }
-  .wiz-net-hop { display:flex; gap:12px; padding:7px 0 7px 13px; }
-  .wiz-net-wire { width:0; border-left:2px solid #4a2024; }
-  .wiz-net-wire.wan { border-left-style:dashed; border-left-color:#6b2b30; }
-  .wiz-net-hop p { margin:0; font-size:11.5px; color:#8d8d8d; line-height:1.6; }
-  .wiz-net-hop p b { color:#ff8a8f; font-weight:600; }
+  /* The diagram. Boxes centred, the line running through the middle of the gaps
+     rather than down the margin — that alone is what makes it read as a figure
+     instead of three cards with notes between them. */
+  .net { margin:4px 0 18px; display:flex; flex-direction:column; align-items:stretch; }
+  .net-node { background:#121212; border:1px solid #333; border-radius:12px; padding:14px 16px; }
+  .net-head { display:flex; align-items:center; gap:13px; }
+  /* herdr, drawn inside the machine rather than named beside it — the agents
+     sitting side by side in one frame is the thing that explains why one can
+     drive another. */
+  .net-inner { margin-top:12px; border:1px dashed #4a4a4a; border-radius:9px; padding:10px 11px; }
+  .net-inner-top { font-size:10.5px; color:#8d8d8d; margin-bottom:8px; }
+  .net-agents { display:flex; flex-wrap:wrap; gap:6px; }
+  .net-agents span { font-size:11px; color:#ddd; background:#1e1e1e; border:1px solid #333;
+                     border-radius:6px; padding:4px 8px; }
+  .net-inner-note { font-size:10.5px; color:#ff8a8f; margin-top:8px; }
+  .net-glyph { width:26px; height:26px; flex-shrink:0; color:#ff8a8f; }
+  .net-text b { display:block; font-size:14px; color:#f0f0f0; margin-bottom:2px; }
+  .net-text span { display:block; font-size:12px; color:#8d8d8d; line-height:1.5; }
+  .net-hop { display:flex; flex-direction:column; align-items:center; gap:5px; padding:5px 0; }
+  /* The wires carry something. A static diagram of a thing whose whole point is
+     that work reaches you where you are says nothing about the reaching; a spark
+     travelling down the line says it without a sentence. Slow on purpose — this
+     sits under text people are reading. */
+  .net-wire { position:relative; width:2px; height:22px; background:#7a2a30; border-radius:2px;
+              overflow:hidden; }
+  .net-wire.wan { background:repeating-linear-gradient(#7a2a30 0 3px, transparent 3px 7px); }
+  .net-wire::after { content:''; position:absolute; left:-1px; width:4px; height:9px; border-radius:2px;
+                     background:linear-gradient(#ff5a60, #ffd9d2); box-shadow:0 0 7px #ff5a60;
+                     animation:net-spark 3.4s ease-in-out infinite; }
+  @keyframes net-spark {
+    0%       { top:-10px; opacity:0 }
+    18%, 62% { opacity:1 }
+    80%,100% { top:22px; opacity:0 }
+  }
+  /* One agent at a time lights up, in order. Four names in a row is a list; four
+     names taking turns is a thing that is running. */
+  .net-agents span { animation:net-agent 6.4s ease-in-out infinite; }
+  .net-agents span:nth-child(2) { animation-delay:1.6s }
+  .net-agents span:nth-child(3) { animation-delay:3.2s }
+  .net-agents span:nth-child(4) { animation-delay:4.8s }
+  @keyframes net-agent {
+    0%, 14%, 100% { border-color:#333; color:#ddd; background:#1e1e1e; }
+    5%            { border-color:#c9272e; color:#fff; background:#2a1416; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .net-wire::after { animation:none; opacity:0 }
+    .net-agents span { animation:none }
+  }
+  .net-label { text-align:center; font-size:11px; color:#7d7d7d; line-height:1.45; }
+  .net-label b { display:block; font-size:12px; color:#ff8a8f; font-weight:600; }
   .wiz-hero { display:flex; justify-content:center; margin:2px 0 18px; }
   .wiz-hero .bi { border-radius:26px; box-shadow:0 10px 34px rgba(224,53,60,.18); }
   .wiz-foot { position:sticky; bottom:0; display:flex; gap:8px; padding:12px 20px 20px;

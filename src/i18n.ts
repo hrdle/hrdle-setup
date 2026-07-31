@@ -51,6 +51,7 @@ const EN: Table = {
   'cmd.copyFailed': 'failed',
 
   'step.intro': 'What this is',
+  'step.how': 'How it fits together',
   'step.machine': 'A machine',
   'step.agent': 'Coding agent',
   'step.tailscale': 'Tailscale',
@@ -59,19 +60,49 @@ const EN: Table = {
   'step.done': 'Glasses',
   'step.outro': 'Finish in the app',
 
-  'intro.title': 'What {product} is',
+  'intro.title': 'Why you would want this',
   'intro.lead':
-    '{product} runs coding agents — Claude Code, Codex, Grok, Kimi — on a machine of yours, and puts them on your phone and on the G2.',
+    'Develop while you walk. Develop on the train. The agent does the work and asks when it needs you — and you answer from wherever you are.',
+  'intro.stillTitle': 'The reason it is worth anything',
+  'intro.still':
+    'A coding agent works for minutes at a time, then stops to ask you something. If you are not at the screen, it waits — and so does the work.',
+  'intro.problemTitle': 'What that looks like',
+  'intro.problem':
+    'You set a refactor going and walk away. Ten minutes later it is sitting on a question it asked nine minutes ago, and nothing has happened since.',
+  'intro.answerTitle': 'What {product} does about it',
+  'intro.answer':
+    'The question arrives on your glasses. You answer it with the ring — in the kitchen, on a walk, in a meeting — and the agent carries on. The screen stops being the place you have to be.',
+  'intro.whatTitle': 'What it is, concretely',
+  'intro.what':
+    '{product} runs your coding agents — Claude Code, Codex, Grok, Kimi — on a machine of yours, and puts them on your phone and on the G2.',
   'intro.net.machine': 'A machine · awake 24/7',
-  'intro.net.machineDesc':
-    'Claude Code, herdr and the {product} server. A desktop at home or a VPS you rent — the agents actually run here, and they keep working while you are not watching, so it must not sleep.',
-  'intro.net.tailscale':
-    '<b>Tailscale</b> — a VPN across your own devices. This leg crosses the open internet, so the phone reaches that machine from anywhere; the traffic is encrypted end to end and no port is opened for anyone else to find.',
+  'intro.net.machineDesc': 'the {product} server, and herdr underneath it',
+  'how.herdr': 'herdr — every session lives in one',
+  'how.agents': 'and they can talk to each other',
+  'how.dogfoodTitle': 'This was built this way',
+  'how.dogfood':
+    'Hrdle is developed on Hrdle. This screen, and the sentence you are reading, were not written at a desk — the machine running the agents was somewhere else entirely, and the answers went back through a pair of glasses. A development PC has stopped being a place you have to be.',
+  'how.freeTitle': 'Nothing is walled off',
+  'how.free':
+    'Starting a session is an ordinary operation, and so is one session talking to another. Claude Code can drive Kimi Code. Codex can be handed a task by something that is not you. An agent can read what another agent is looking at, answer its question, and hand back — across a machine, or across two of them over the tailnet. There is no sandbox between them saying no.',
+  'intro.net.machineNote':
+    'A desktop at home or a VPS you rent. The agents actually run here and keep working while you are not watching, so it must not sleep.',
+  'intro.net.tailscale': 'Tailscale',
+  'intro.net.tailscaleWire': 'over the internet',
+  'intro.net.tailscaleNote':
+    '<b>Tailscale</b> is a VPN across your own devices. That leg crosses the open internet, so the phone reaches the machine from anywhere — encrypted end to end, with no port opened for anyone else to find.',
   'intro.net.phone': 'Your phone',
-  'intro.net.phoneDesc': 'the {product} app, wherever you are',
-  'intro.net.bluetooth': '<b>Bluetooth</b> — the phone drives the glasses directly.',
+  'intro.net.phoneDesc': 'the {product} app',
+  'intro.net.bluetooth': 'Bluetooth',
+  'intro.net.bluetoothWire': 'in the room',
   'intro.net.glasses': 'The G2',
-  'intro.net.glassesDesc': 'read what an agent is asking, answer it with the ring',
+  'intro.net.glassesDesc': 'read, and answer with the ring',
+  'how.title': 'How the pieces fit',
+  'how.lead':
+    'The agent feels like it is right here — one line in front of your eye, answered with a thumb. It is not. It is on a machine somewhere else entirely, and these two hops are what close the distance.',
+  'how.closingTitle': 'Which is the trick',
+  'how.closing':
+    'Nothing runs on the glasses and nothing runs on the phone. They are a window onto a machine that may be in another building, and the window is what makes it feel like arm\'s reach.',
   'intro.getTitle': 'What you get',
   'intro.get1': 'Run several agent sessions at once and switch between them',
   'intro.get2': 'Watch what each one is doing, live',
@@ -233,6 +264,7 @@ const JA: Table = {
   'cmd.copyFailed': '失敗',
 
   'step.intro': 'これは何か',
+  'step.how': '全体のつながり',
   'step.machine': 'マシン',
   'step.agent': 'エージェント',
   'step.tailscale': 'Tailscale',
@@ -241,19 +273,49 @@ const JA: Table = {
   'step.done': 'グラス',
   'step.outro': 'アプリで仕上げる',
 
-  'intro.title': '{product} とは',
+  'intro.title': 'なぜこれを使うのか',
   'intro.lead':
+    '歩きながら開発する。電車の中で開発する。手を動かすのはエージェントで、必要なときだけ聞いてくる。その答えを、どこにいても返せます。',
+  'intro.stillTitle': 'なぜそれに意味があるのか',
+  'intro.still':
+    'コーディングエージェントは数分働いては、あなたに何かを尋ねて止まります。画面の前にいなければ、エージェントは待ち続け、仕事も止まったままです。',
+  'intro.problemTitle': '実際に起きること',
+  'intro.problem':
+    'リファクタを走らせて席を立つ。10分後に戻ると、9分前に投げられた質問の前で止まっていて、その間なにも進んでいない。',
+  'intro.answerTitle': '{product} がすること',
+  'intro.answer':
+    'その質問がグラスに届きます。台所でも、散歩中でも、会議中でも、リングで答えればエージェントは続きを始めます。画面の前が「いなければならない場所」ではなくなります。',
+  'intro.whatTitle': '具体的には',
+  'intro.what':
     '{product} は Claude Code、Codex、Grok、Kimi といったコーディングエージェントをあなたのマシンで動かし、それをスマホと G2 に映します。',
   'intro.net.machine': 'マシン · 24時間起動',
-  'intro.net.machineDesc':
-    'Claude Code、herdr、そして {product} サーバー。自宅のデスクトップでも、借りた VPS でも構いません。エージェントが実際に動くのはここで、あなたが見ていない間も動き続けるため、スリープさせてはいけません。',
-  'intro.net.tailscale':
-    '<b>Tailscale</b> — 自分のデバイス同士をつなぐ VPN です。この区間はインターネットを通るので、どこからでもそのマシンに届きます。通信は端から端まで暗号化され、他人に見つかるポートは開きません。',
+  'intro.net.machineDesc': '{product} サーバーと、その下の herdr',
+  'how.herdr': 'herdr — すべてのセッションはこの中',
+  'how.agents': 'そして互いに話せる',
+  'how.dogfoodTitle': 'これ自身も、これで作られました',
+  'how.dogfood':
+    'Hrdle の開発は Hrdle の上で行われています。この画面も、いま読んでいるこの文章も、机に向かって書かれたものではありません。エージェントを動かしていたマシンはまったく別の場所にあり、返事はグラス越しに戻っていきました。開発用の PC は、もう「いなければならない場所」ではありません。',
+  'how.freeTitle': '制限がない',
+  'how.free':
+    'セッションを起動するのも、セッション同士が話すのも、ごく普通の操作です。Claude Code から Kimi Code を動かす。Codex に、あなた以外の誰かが仕事を渡す。別のエージェントが見ているものを読み、その質問に答えて返す — 同じマシンの中でも、tailnet 越しに2台にまたがってでも。あいだに「駄目だ」と言うサンドボックスはありません。',
+  'intro.net.machineNote':
+    '自宅のデスクトップでも、借りた VPS でも構いません。エージェントが実際に動くのはここで、あなたが見ていない間も動き続けるため、スリープさせてはいけません。',
+  'intro.net.tailscale': 'Tailscale',
+  'intro.net.tailscaleWire': 'インターネット経由',
+  'intro.net.tailscaleNote':
+    '<b>Tailscale</b> は自分のデバイス同士をつなぐ VPN です。この区間はインターネットを通るので、どこからでもマシンに届きます。通信は端から端まで暗号化され、他人に見つかるポートは開きません。',
   'intro.net.phone': 'スマホ',
-  'intro.net.phoneDesc': '{product} アプリ。どこにいても',
-  'intro.net.bluetooth': '<b>Bluetooth</b> — スマホがグラスを直接動かします。',
+  'intro.net.phoneDesc': '{product} アプリ',
+  'intro.net.bluetooth': 'Bluetooth',
+  'intro.net.bluetoothWire': '同じ部屋の中',
   'intro.net.glasses': 'G2 グラス',
-  'intro.net.glassesDesc': 'エージェントの問いを読み、リングで答える',
+  'intro.net.glassesDesc': '読んで、リングで答える',
+  'how.title': '全体のつながり',
+  'how.lead':
+    'エージェントはすぐ目の前にいるように感じます。視界に1行出て、指先で答えられる。けれど実際は、まったく別の場所にあるマシンの中にいます。その距離を埋めているのが、この2つのつなぎ目です。',
+  'how.closingTitle': 'そこが面白いところ',
+  'how.closing':
+    'グラスでも、スマホでも、何ひとつ動いていません。2つとも、別の建物にあるかもしれないマシンを覗く窓です。その窓が、手の届く距離にいるように感じさせています。',
   'intro.getTitle': 'できること',
   'intro.get1': '複数のエージェントセッションを同時に動かし、切り替える',
   'intro.get2': 'それぞれが何をしているかをリアルタイムで見る',
