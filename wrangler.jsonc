@@ -1,0 +1,18 @@
+{
+  // Workers, not Pages.
+  //
+  // Pages is no longer where Cloudflare puts new static projects — Workers with
+  // static assets is, and it is the one that keeps getting features. There is no
+  // Worker script here at all: `assets` alone serves the built site, which is
+  // the whole of what this is.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hrdle-setup",
+  "compatibility_date": "2026-07-31",
+  "assets": {
+    // Vite's output. Everything is one page, so an unknown path should land on
+    // it rather than on a 404 — the wizard's step lives in localStorage, not in
+    // the URL, but a stray link should still show the guide.
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}
