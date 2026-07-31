@@ -25,6 +25,7 @@ export type StepId =
   | 'agent'
   | 'tailscale'
   | 'install'
+  | 'groq'
   | 'outro'
   | 'connect'
   | 'done'
@@ -41,6 +42,9 @@ const PREPARATION: readonly Step[] = [
   { id: 'agent', where: 'machine' },
   { id: 'tailscale', where: 'machine' },
   { id: 'install', where: 'machine' },
+  // Getting the key is machine work and needs no server, so it belongs in the
+  // preparation. Pasting it needs one, and happens on the last screen.
+  { id: 'groq', where: 'machine' },
 ]
 
 /**
@@ -108,15 +112,88 @@ function glyph(kind: 'machine' | 'phone' | 'glasses'): string {
   return `<svg class="net-glyph" viewBox="0 0 24 24" aria-hidden="true">${inner}</svg>`
 }
 
+/**
+ * What the phone is actually showing.
+ *
+ * A labelled rectangle called "phone" tells someone nothing about what they get.
+ * Three session rows with status dots is the app's real first screen, small
+ * enough to be an illustration and specific enough to be an answer.
+ */
+function phoneScreen(): string {
+  const rows: Array<[string, string]> = [
+    ['hrdle-work-2', 'busy'],
+    ['glasses', 'ask'],
+    ['api', 'idle'],
+  ]
+  return `<div class="mini phone-mini">${rows
+    .map(([name, state]) => `<div class="mini-row"><i class="dot ${state}"></i>${name}</div>`)
+    .join('')}</div>`
+}
+
+/**
+ * What the G2 is actually showing.
+ *
+ * Green on black in seven lines, because that is what the hardware draws — the
+ * one place in this whole site where the green is not a mistake. It runs the
+ * same twelve-second loop as everything else: the question appears when the
+ * question arrives, the choice highlights when it is answered, and it clears.
+ */
+function glassesScreen(): string {
+  return `<div class="mini g2-mini">
+    <div class="g2-head">hrdle-work-2</div>
+    <div class="g2-body">Apply this refactor?</div>
+    <div class="g2-choice"><span class="g2-pick">yes</span> &nbsp;no</div>
+    <div class="g2-foot">tap:select</div>
+  </div>`
+}
+
+/**
+ * Sessions being made, split and typed into.
+ *
+ * The claim on this screen is that a session is yours to open, split and send
+ * to. Written down that is four verbs; shown, it is a pane appearing beside
+ * another one and a line of text landing in it. The demo runs the verbs in
+ * order and starts over.
+ */
+function paneDemo(): string {
+  return `<div class="demo">
+    <div class="panes">
+      <div class="pane d1"><b>claude</b><i class="caret"></i></div>
+      <div class="pane d2"><b>kimi</b><i class="caret"></i></div>
+      <div class="pane d3"><b>codex</b><i class="caret"></i></div>
+    </div>
+    <div class="demo-cap"><span class="c0">${t('demo.one')}</span><span class="c1">${t('demo.split')}</span><span class="c2">${t('demo.more')}</span><span class="c3">${t('demo.send')}</span></div>
+  </div>`
+}
+
+/**
+ * One agent handing work to another, where you can see it.
+ *
+ * Two panes and a thing crossing between them. The point is not that it is
+ * possible — it is that it is *visible*, so the drawing has to show the message
+ * arriving somewhere you could have been watching.
+ */
+function talkDemo(): string {
+  return `<div class="demo">
+    <div class="panes talk">
+      <div class="pane"><b>claude</b><em class="say-out">run the tests</em></div>
+      <div class="pane"><b>kimi</b><em class="say-in">ok, running</em></div>
+      <span class="msg"></span>
+    </div>
+    <div class="demo-cap"><span class="t0">${t('demo.watch')}</span></div>
+  </div>`
+}
+
 /** One box in the diagram. `inside` nests a second frame within it. */
 function node(
   kind: 'machine' | 'phone' | 'glasses',
   title: string,
   note: string,
   inside = '',
+  badge = '',
 ): string {
-  return `<div class="net-node${inside ? ' tall' : ''}">
-    <div class="net-head">${glyph(kind)}<div class="net-text"><b>${title}</b><span>${note}</span></div></div>
+  return `<div class="net-node">
+    <div class="net-head">${glyph(kind)}<div class="net-text"><b>${title}</b><span>${note}</span></div>${badge}</div>
     ${inside}
   </div>`
 }
@@ -134,8 +211,8 @@ function agentsInside(): string {
   const names = ['Claude Code', 'Codex', 'Grok', 'Kimi']
   return `<div class="net-inner">
     <div class="net-inner-top">${t('how.herdr')}</div>
-    <div class="net-agents">${names.map((n) => `<span>${n}</span>`).join('')}</div>
-    <div class="net-inner-note">${t('how.agents')}</div>
+    <div class="net-agents">${names.map((n, i) => `<span class="a${i}">${n}</span>`).join('')}</div>
+    <div class="net-handoff"><span class="net-dart"></span><em>${t('how.handoff')}</em></div>
   </div>`
 }
 
@@ -147,8 +224,10 @@ function agentsInside(): string {
  * between them, which is what it was. A line that leaves the box it came from
  * and enters the next one is the whole difference.
  */
-function hop(label: string, sub: string, wan: boolean): string {
-  const wire = `<span class="net-wire${wan ? ' wan' : ''}"></span>`
+function hop(label: string, sub: string, wan: boolean, order: number): string {
+  // `order` staggers the two hops so a question is seen travelling outward and
+  // an answer travelling back, rather than both ends blinking at once.
+  const wire = `<span class="net-wire${wan ? ' wan' : ''} leg${order}"></span>`
   return `<div class="net-hop">${wire}<span class="net-label"><b>${label}</b>${sub}</span>${wire}</div>`
 }
 
@@ -161,20 +240,43 @@ function screenHtml(id: StepId): { title: string; html: string } {
       return {
         title: t('intro.title'),
         html: `
-          <div class="wiz-hero">${brandIcon('hero', 132)}</div>
+          <div class="wiz-hero">${brandIcon('hero', 118)}</div>
           <p class="wiz-lead">${t('intro.lead')}</p>
+
+          ${paneDemo()}
           <div class="wiz-card">
-            <h3>${t('intro.stillTitle')}</h3>
-            <p>${t('intro.still')}</p>
+            <h3>${t('intro.diffTitle')}</h3>
+            <p>${t('intro.diff', { product })}</p>
           </div>
           <div class="wiz-card">
-            <h3>${t('intro.problemTitle')}</h3>
-            <p>${t('intro.problem')}</p>
+            <h3>${t('intro.rivalEvenTitle')}</h3>
+            <p>${t('intro.rivalEven')}</p>
+          </div>
+          <div class="wiz-card">
+            <h3>${t('intro.rivalCmuxTitle')}</h3>
+            <p>${t('intro.rivalCmux')}</p>
+          </div>
+          <div class="wiz-card">
+            <h3>${t('intro.rivalHerdrTitle')}</h3>
+            <p>${t('intro.rivalHerdr', { product })}</p>
           </div>
           <div class="wiz-card wiz-warn">
-            <h3>${t('intro.answerTitle', { product })}</h3>
-            <p>${t('intro.answer')}</p>
+            <h3>${t('intro.gapTitle')}</h3>
+            <p>${t('intro.gap', { product })}</p>
+            <p>${t('intro.gap2')}</p>
           </div>
+
+          ${talkDemo()}
+          <div class="wiz-card">
+            <h3>${t('intro.seeTitle')}</h3>
+            <p>${t('intro.see')}</p>
+          </div>
+
+          <div class="wiz-card wiz-warn">
+            <h3>${t('intro.freeTitle')}</h3>
+            <p>${t('intro.free')}</p>
+          </div>
+
           <div class="wiz-card">
             <h3>${t('intro.whatTitle')}</h3>
             <p>${t('intro.what', { product })}</p>
@@ -195,32 +297,42 @@ function screenHtml(id: StepId): { title: string; html: string } {
         title: t('how.title'),
         html: `
           <p class="wiz-lead">${t('how.lead')}</p>
-          <div class="net">
-            ${node('machine', t('intro.net.machine'), t('intro.net.machineDesc', { product }), agentsInside())}
-            ${hop(t('intro.net.tailscale'), t('intro.net.tailscaleWire'), true)}
-            ${node('phone', t('intro.net.phone'), t('intro.net.phoneDesc', { product }))}
-            ${hop(t('intro.net.bluetooth'), t('intro.net.bluetoothWire'), false)}
-            ${node('glasses', t('intro.net.glasses'), t('intro.net.glassesDesc'))}
+          <div class="wiz-card wiz-warn">
+            <h3>${t('shot.speakTitle')}</h3>
+            <p>${t('shot.speak')}</p>
           </div>
+          <figure class="shot">
+            <img src="/shots/g2-asking.png" alt="" width="576" height="288" loading="lazy">
+            <figcaption><b>${t('shot.askTitle')}</b>${t('shot.ask')}</figcaption>
+          </figure>
+          <figure class="shot">
+            <img src="/shots/g2-choosing.png" alt="" width="576" height="288" loading="lazy">
+            <figcaption><b>${t('shot.chooseTitle')}</b>${t('shot.choose')}</figcaption>
+          </figure>
+          <p class="wiz-note" style="text-align:center; margin:0 0 20px">${t('shot.rest')}</p>
+          <div class="net">
+            ${node(
+              'machine',
+              t('intro.net.machine'),
+              t('intro.net.machineDesc', { product }),
+              agentsInside(),
+              '<span class="net-state"><i class="net-busy"></i><i class="net-wait"></i></span>',
+            )}
+            ${hop(t('intro.net.tailscale'), t('intro.net.tailscaleWire'), true, 0)}
+            ${node('phone', t('intro.net.phone'), t('intro.net.phoneDesc', { product }), phoneScreen())}
+            ${hop(t('intro.net.bluetooth'), t('intro.net.bluetoothWire'), false, 1)}
+            ${node(
+              'glasses',
+              t('intro.net.glasses'),
+              t('intro.net.glassesDesc'),
+              glassesScreen(),
+              '<span class="net-ask">?</span>',
+            )}
+          </div>
+          <p class="wiz-note" style="text-align:center; margin:0 0 18px">${t('how.caption')}</p>
           <div class="wiz-card wiz-warn">
             <h3>${t('how.dogfoodTitle')}</h3>
-            <p>${t('how.dogfood')}</p>
-          </div>
-          <div class="wiz-card">
-            <h3>${t('how.freeTitle')}</h3>
-            <p>${t('how.free')}</p>
-          </div>
-          <div class="wiz-card">
-            <h3>${t('how.closingTitle')}</h3>
-            <p>${t('how.closing')}</p>
-          </div>
-          <div class="wiz-card">
-            <h3>Tailscale</h3>
-            <p>${t('intro.net.tailscaleNote')}</p>
-          </div>
-          <div class="wiz-card">
-            <h3>${t('intro.net.machine')}</h3>
-            <p>${t('intro.net.machineNote')}</p>
+            <p>${t('how.dogfoodShort')}</p>
           </div>
         `,
       }
@@ -288,6 +400,52 @@ function screenHtml(id: StepId): { title: string; html: string } {
           <p class="wiz-note">${t('tailscale.downloads', {
             link: link('https://tailscale.com/download', t('tailscale.downloadsLabel')),
           })}</p>
+        `,
+      }
+
+    case 'groq':
+      return {
+        title: t('groq.title'),
+        html: `
+          <p class="wiz-lead">${t('groq.lead')}</p>
+          <div class="wiz-card">
+            <h3>${t('groq.whyTitle')}</h3>
+            <p>${t('groq.why')}</p>
+          </div>
+          <div class="wiz-card">
+            <h3>${t('groq.step1')}</h3>
+            <p class="wiz-note">${t('groq.step1Note')}</p>
+            ${linkButton('https://console.groq.com/keys', t('groq.openConsole'))}
+            ${cmd('https://console.groq.com/keys')}
+          </div>
+          <div class="wiz-card">
+            <h3>${t('groq.step2')}</h3>
+            <p class="wiz-note">${t('groq.step2Note')}</p>
+          </div>
+          ${
+            embedded
+              ? `<div class="wiz-card">
+                   <h3>${t('groq.step3')}</h3>
+                   <p class="wiz-note">${t('groq.pasteNote')}</p>
+                   <input id="groq-key" class="wiz-input" type="password" autocomplete="off"
+                          inputmode="text" autocapitalize="off" spellcheck="false"
+                          placeholder="${t('groq.pastePlaceholder')}" />
+                   <div style="display:flex; gap:8px; margin-top:10px">
+                     <button type="button" class="wiz-scan" id="groq-hold"
+                             style="margin:0">${t('groq.pasteSave')}</button>
+                     <button type="button" class="wiz-ghost" id="groq-forget">${t('groq.pasteClear')}</button>
+                   </div>
+                   <div id="groq-status" class="wiz-status"></div>
+                 </div>`
+              : `<div class="wiz-card">
+                   <h3>${t('groq.step3Later')}</h3>
+                   <p class="wiz-note">${t('groq.step3Note')}</p>
+                 </div>`
+          }
+          <div class="wiz-card wiz-warn">
+            <h3>${t('groq.privacyTitle')}</h3>
+            <p>${t('groq.privacy', { product })}</p>
+          </div>
         `,
       }
 
@@ -453,34 +611,173 @@ const CSS = `
   .net-text b { display:block; font-size:14px; color:#f0f0f0; margin-bottom:2px; }
   .net-text span { display:block; font-size:12px; color:#8d8d8d; line-height:1.5; }
   .net-hop { display:flex; flex-direction:column; align-items:center; gap:5px; padding:5px 0; }
-  /* The wires carry something. A static diagram of a thing whose whole point is
-     that work reaches you where you are says nothing about the reaching; a spark
-     travelling down the line says it without a sentence. Slow on purpose — this
-     sits under text people are reading. */
-  .net-wire { position:relative; width:2px; height:22px; background:#7a2a30; border-radius:2px;
-              overflow:hidden; }
+  /* One twelve-second loop, shared by everything in the figure: the agents work,
+     one hands off to another, a question travels out to the glasses, an answer
+     comes back, work resumes. Told rather than captioned — the whole point of
+     the product is that work reaches you where you are, and a still picture says
+     nothing about the reaching.
+     Timeline: 0-30% working, 20-30% hand-off, 33-42% question outward,
+     44-64% waiting on the wearer, 66-75% answer back, 78-100% working again. */
+  .net-wire { position:relative; width:2px; height:24px; background:#7a2a30; border-radius:2px; }
   .net-wire.wan { background:repeating-linear-gradient(#7a2a30 0 3px, transparent 3px 7px); }
-  .net-wire::after { content:''; position:absolute; left:-1px; width:4px; height:9px; border-radius:2px;
-                     background:linear-gradient(#ff5a60, #ffd9d2); box-shadow:0 0 7px #ff5a60;
-                     animation:net-spark 3.4s ease-in-out infinite; }
-  @keyframes net-spark {
-    0%       { top:-10px; opacity:0 }
-    18%, 62% { opacity:1 }
-    80%,100% { top:22px; opacity:0 }
+  .net-wire::after, .net-wire::before {
+    content:''; position:absolute; left:-2px; width:6px; height:10px; border-radius:3px; opacity:0;
   }
-  /* One agent at a time lights up, in order. Four names in a row is a list; four
-     names taking turns is a thing that is running. */
-  .net-agents span { animation:net-agent 6.4s ease-in-out infinite; }
-  .net-agents span:nth-child(2) { animation-delay:1.6s }
-  .net-agents span:nth-child(3) { animation-delay:3.2s }
-  .net-agents span:nth-child(4) { animation-delay:4.8s }
+  /* Question, outward. */
+  .net-wire::after { background:linear-gradient(#ff5a60,#ffd9d2); box-shadow:0 0 8px #ff5a60;
+                     animation:net-out 12s linear infinite; }
+  /* Answer, back. Cooler, so the two directions are not the same event twice. */
+  .net-wire::before { background:linear-gradient(#d9f7e4,#4ade80); box-shadow:0 0 8px #4ade80;
+                      animation:net-back 12s linear infinite; }
+  .net-wire.leg1::after { animation-delay:0.55s }
+  .net-wire.leg1::before { animation-delay:-0.55s }
+  @keyframes net-out {
+    0%, 33%   { top:-10px; opacity:0 }
+    35%       { top:-4px;  opacity:1 }
+    42%       { top:22px;  opacity:1 }
+    44%, 100% { top:26px;  opacity:0 }
+  }
+  @keyframes net-back {
+    0%, 66%   { top:26px; opacity:0 }
+    68%       { top:22px; opacity:1 }
+    75%       { top:-4px; opacity:1 }
+    77%, 100% { top:-10px; opacity:0 }
+  }
+  /* The agents take turns, then one hands to another. */
+  .net-agents span { animation:net-agent 12s linear infinite; }
+  .net-agents .a1 { animation-delay:1.1s }
+  .net-agents .a2 { animation-delay:2.2s }
+  .net-agents .a3 { animation-delay:3.3s }
   @keyframes net-agent {
-    0%, 14%, 100% { border-color:#333; color:#ddd; background:#1e1e1e; }
-    5%            { border-color:#c9272e; color:#fff; background:#2a1416; }
+    0%, 9%, 100%  { border-color:#333; color:#ddd; background:#1e1e1e; }
+    3%            { border-color:#c9272e; color:#fff; background:#2a1416; }
+    66%, 74%      { border-color:#333; }
+    70%           { border-color:#c9272e; color:#fff; background:#2a1416; }
+  }
+  /* The hand-off itself: a dart crossing the row of names. */
+  .net-handoff { position:relative; margin-top:9px; height:14px; }
+  .net-handoff em { position:absolute; left:0; top:0; font-style:normal; font-size:10.5px;
+                    color:#ff8a8f; opacity:0; animation:net-handoff-label 12s linear infinite; }
+  .net-dart { position:absolute; top:4px; width:16px; height:2px; border-radius:2px;
+              background:linear-gradient(90deg, transparent, #ff5a60); opacity:0;
+              animation:net-dart 12s linear infinite; }
+  @keyframes net-dart {
+    0%, 18%   { left:6%;  opacity:0 }
+    21%       { opacity:1 }
+    28%       { left:62%; opacity:1 }
+    30%, 100% { left:70%; opacity:0 }
+  }
+  @keyframes net-handoff-label { 0%,19%,32%,100% { opacity:0 } 22%,29% { opacity:1 } }
+  /* The machine is busy, except while it is waiting on the wearer. */
+  .net-state { margin-left:auto; display:flex; align-items:center; }
+  .net-busy { width:7px; height:7px; border-radius:50%; background:#4ade80;
+              animation:net-busy 12s linear infinite; }
+  .net-wait { display:none }
+  @keyframes net-busy {
+    0%, 42%   { opacity:1; transform:scale(1) }
+    44%, 64%  { opacity:.22; transform:scale(.8) }
+    66%, 100% { opacity:1; transform:scale(1) }
+  }
+  /* The question, sitting on the glasses until it is answered. */
+  .net-ask { margin-left:auto; width:20px; height:20px; border-radius:50%; background:#c9272e;
+             color:#fff; font-size:12px; font-weight:700; display:flex; align-items:center;
+             justify-content:center; opacity:0; animation:net-ask 12s linear infinite; }
+  @keyframes net-ask {
+    0%, 43%   { opacity:0; transform:scale(.6) }
+    46%, 64%  { opacity:1; transform:scale(1) }
+    67%, 100% { opacity:0; transform:scale(.6) }
+  }
+  /* What the glasses actually draw, captured from the simulator that renders
+     exactly what the device does — same 576x288, same seven lines, same green.
+     A drawing of this would have been easier and would have been worth less:
+     the only thing that answers "what will I see?" is the thing itself. */
+  .shot { margin:0 0 20px; }
+  .shot img { display:block; width:100%; height:auto; background:#050805; border-radius:10px;
+              border:1px solid #1e3a24; }
+  .shot figcaption { font-size:12.5px; color:#8d8d8d; line-height:1.65; margin-top:10px; }
+  .shot figcaption b { display:block; color:#ff6167; font-size:13px; margin-bottom:4px; }
+  /* Demos. Both run a ten-second loop of their own — these are claims being
+     shown rather than a system being diagrammed, so they do not need to share
+     the figure's clock. */
+  .demo { margin:2px 0 14px; }
+  .panes { display:flex; gap:4px; height:74px; }
+  .pane { position:relative; flex:1; min-width:0; border:1px solid #2f2f2f; border-radius:7px;
+          background:#0e0e0e; padding:7px 8px; font-family:ui-monospace, Menlo, monospace;
+          overflow:hidden; }
+  .pane b { display:block; font-size:9.5px; color:#7d7d7d; font-weight:400; }
+  .caret { position:absolute; left:8px; top:26px; width:6px; height:11px; background:#ff8a8f;
+           animation:caret 1s steps(2) infinite; }
+  .d2, .d3 { flex-grow:0; opacity:0; padding-left:0; padding-right:0; border-width:0; }
+  .d2 { animation:pane-in 10s linear infinite; animation-delay:0s }
+  .d3 { animation:pane-in 10s linear infinite; animation-delay:1.6s }
+  @keyframes caret { 0% { opacity:1 } 50% { opacity:0 } }
+  @keyframes pane-in {
+    0%, 22%   { flex-grow:0; opacity:0; border-width:0; padding-left:0; padding-right:0 }
+    30%, 88%  { flex-grow:1; opacity:1; border-width:1px; padding-left:8px; padding-right:8px }
+    96%, 100% { flex-grow:0; opacity:0; border-width:0; padding-left:0; padding-right:0 }
+  }
+  .demo-cap { position:relative; height:15px; margin-top:7px; }
+  .demo-cap span { position:absolute; left:0; right:0; text-align:center; font-size:10.5px;
+                   color:#ff8a8f; opacity:0; animation:cap 10s linear infinite; }
+  /* Scoped on purpose. The rule above sets 'animation' as a shorthand, which
+     carries an implicit zero delay, and it beats a bare class selector on
+     specificity — so every caption ran at once and printed on top of the others,
+     which is exactly what the device showed. */
+  .demo-cap .c1 { animation-delay:2.2s }
+  .demo-cap .c2 { animation-delay:4.2s }
+  .demo-cap .c3 { animation-delay:6.4s }
+  @keyframes cap { 0%,1% { opacity:0 } 4%,18% { opacity:1 } 21%,100% { opacity:0 } }
+  /* The hand-off, seen. */
+  .talk { position:relative }
+  .say-out, .say-in { display:block; margin-top:5px; font-size:10px; font-style:normal;
+                      color:#ddd; opacity:0; animation:say 10s linear infinite }
+  .say-in { color:#4ade80; animation-delay:2.4s }
+  @keyframes say { 0%,8% { opacity:0 } 14%,74% { opacity:1 } 82%,100% { opacity:0 } }
+  .msg { position:absolute; top:34px; width:7px; height:7px; border-radius:50%; background:#ff5a60;
+         box-shadow:0 0 8px #ff5a60; opacity:0; animation:msg 10s linear infinite }
+  @keyframes msg {
+    0%, 16%   { left:26%; opacity:0 }
+    19%       { opacity:1 }
+    23%       { left:70%; opacity:1 }
+    25%, 100% { left:74%; opacity:0 }
   }
   @media (prefers-reduced-motion: reduce) {
-    .net-wire::after { animation:none; opacity:0 }
-    .net-agents span { animation:none }
+    .d2, .d3 { flex-grow:1; opacity:1; border-width:1px; padding-left:8px; padding-right:8px }
+    .say-out, .say-in { opacity:1 }
+    .caret, .msg, .demo-cap span, .d2, .d3, .say-out, .say-in { animation:none }
+    .c3 { opacity:1 }
+  }
+  /* The two little screens. Both keep to the twelve-second loop. */
+  .mini { margin-top:12px; border-radius:8px; overflow:hidden; }
+  .phone-mini { border:1px solid #2e2e2e; background:#0e0e0e; padding:7px 8px; }
+  .mini-row { display:flex; align-items:center; gap:7px; font-size:11px; color:#c8c8c8;
+              padding:3px 2px; font-family:ui-monospace, Menlo, monospace; }
+  .dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+  .dot.busy { background:#4ade80; animation:net-busy 12s linear infinite }
+  .dot.idle { background:#3a3a3a }
+  .dot.ask  { background:#c9272e; opacity:.25; animation:net-ask-dot 12s linear infinite }
+  @keyframes net-ask-dot { 0%,43% { opacity:.25 } 46%,64% { opacity:1 } 67%,100% { opacity:.25 } }
+  /* Green on black, the one place on this site where that is not a mistake:
+     it is what the hardware actually draws. */
+  .g2-mini { border:1px solid #1e3a24; background:#050805; padding:8px 9px;
+             font-family:ui-monospace, Menlo, monospace; color:#4ade80; line-height:1.5; }
+  .g2-head { font-size:9.5px; color:#2f7a45; border-bottom:1px solid #143020; padding-bottom:3px; }
+  .g2-body { font-size:11px; margin-top:5px; opacity:0; animation:net-g2-body 12s linear infinite }
+  .g2-choice { font-size:11px; margin-top:2px; opacity:0; animation:net-g2-body 12s linear infinite }
+  .g2-pick { padding:0 4px; border-radius:3px; animation:net-g2-pick 12s linear infinite }
+  .g2-foot { font-size:9px; color:#2f7a45; margin-top:5px; }
+  @keyframes net-g2-body { 0%,43% { opacity:0 } 46%,64% { opacity:1 } 67%,100% { opacity:0 } }
+  @keyframes net-g2-pick {
+    0%, 57%   { background:transparent; color:#4ade80 }
+    60%, 65%  { background:#4ade80; color:#050805 }
+    68%, 100% { background:transparent; color:#4ade80 }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .g2-body, .g2-choice { opacity:1 }
+    .g2-pick, .dot.busy, .dot.ask { animation:none }
+    .net-wire::after, .net-wire::before, .net-dart, .net-handoff em { animation:none; opacity:0 }
+    .net-agents span, .net-busy, .net-ask { animation:none }
+    .net-ask { opacity:1 }
   }
   .net-label { text-align:center; font-size:11px; color:#7d7d7d; line-height:1.45; }
   .net-label b { display:block; font-size:12px; color:#ff8a8f; font-weight:600; }

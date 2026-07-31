@@ -36,6 +36,16 @@ import {
 } from './wizard.ts'
 
 const STEP_KEY = 'hrdle-setup-step'
+/**
+ * A Groq key pasted before there was anywhere to put it.
+ *
+ * The console shows the key once. Telling someone to keep it safe until two
+ * screens later is telling them to lose it, so it is taken at the moment it
+ * exists and held here until a server answers — then sent, and deleted. In this
+ * browser only: nothing forwards it, and it does not outlive the connection it
+ * was waiting for.
+ */
+const PENDING_KEY = 'hrdle-setup-pending-groq-key'
 const app = document.querySelector<HTMLDivElement>('#app')
 if (!app) throw new Error('#app is missing from index.html')
 
@@ -169,6 +179,38 @@ function render(): void {
 
   if (step === 'connect') wireConnect()
   if (step === 'done') wireDone()
+  if (step === 'groq') wireGroq()
+}
+
+function wireGroq(): void {
+  const field = app?.querySelector<HTMLInputElement>('#groq-key')
+  const hold = app?.querySelector<HTMLButtonElement>('#groq-hold')
+  const forget = app?.querySelector<HTMLButtonElement>('#groq-forget')
+  const status = app?.querySelector<HTMLDivElement>('#groq-status')
+  if (!field || !hold || !forget || !status) return
+
+  if (read(PENDING_KEY)) status.innerHTML = `<span class="wiz-ok">${t('groq.pasteHeld')}</span>`
+
+  hold.addEventListener('click', () => {
+    const value = field.value.trim()
+    if (!value) {
+      status.innerHTML = `<span style="color:#f44">${t('groq.pasteEmpty')}</span>`
+      return
+    }
+    write(PENDING_KEY, value)
+    field.value = ''
+    status.innerHTML = `<span class="wiz-ok">${t('groq.pasteHeld')}</span>`
+  })
+
+  forget.addEventListener('click', () => {
+    try {
+      localStorage.removeItem(PENDING_KEY)
+    } catch {
+      /* nothing to remove */
+    }
+    field.value = ''
+    status.textContent = t('groq.pasteCleared')
+  })
 }
 
 function wireConnect(): void {
@@ -235,6 +277,7 @@ function wireConnect(): void {
 
 function wireDone(): void {
   paintServer()
+  void handOverPendingKey()
   void wireSettingsPanel({ get: getSettingsViaHost, put: putSettingsViaHost })
   app?.querySelector('#wiz-disconnect')?.addEventListener('click', () => {
     clearHostUrl()
@@ -243,6 +286,37 @@ function wireDone(): void {
     summary = null
     goTo('connect')
   })
+}
+
+/**
+ * Send the key that was pasted before there was a server, then forget it.
+ *
+ * Runs once the done screen exists, which is the first moment there is anywhere
+ * for it to go. On failure it is kept, and the panel below is where it can be
+ * pasted again.
+ */
+async function handOverPendingKey(): Promise<void> {
+  const pending = read(PENDING_KEY)
+  if (!pending) return
+  const note = app?.querySelector<HTMLDivElement>('#wiz-server')
+  try {
+    await putSettingsViaHost({ groqApiKey: pending })
+    try {
+      localStorage.removeItem(PENDING_KEY)
+    } catch {
+      /* it went across; a store that will not forget is not worth failing over */
+    }
+    if (note) note.insertAdjacentHTML('afterend', `<p class="wiz-note wiz-ok">${t('groq.sent')}</p>`)
+  } catch (err) {
+    if (note) {
+      note.insertAdjacentHTML(
+        'afterend',
+        `<p class="wiz-note" style="color:#ff8a8f">${t('groq.sendFailed', {
+          error: err instanceof Error ? err.message : String(err),
+        })}</p>`,
+      )
+    }
+  }
 }
 
 // ── Start ──

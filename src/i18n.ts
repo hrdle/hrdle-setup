@@ -56,13 +56,42 @@ const EN: Table = {
   'step.agent': 'Coding agent',
   'step.tailscale': 'Tailscale',
   'step.install': 'Install',
+  'step.groq': 'Voice input',
   'step.connect': 'Connect',
   'step.done': 'Glasses',
   'step.outro': 'Finish in the app',
 
   'intro.title': 'Why you would want this',
   'intro.lead':
-    'Develop while you walk. Develop on the train. The agent does the work and asks when it needs you — and you answer from wherever you are.',
+    'The session itself is yours to control. Open one, look inside it, type into it, start another, close it. That is the difference, and everything else follows from it.',
+  'demo.one': 'one session',
+  'demo.split': 'split it',
+  'demo.more': 'start another',
+  'demo.send': 'type into any of them',
+  'demo.watch': 'and you can watch it happen',
+  'intro.diffTitle': 'What this is next to',
+  'intro.diff':
+    'Holding the sessions is not {product}\'s doing — herdr does that, and a session here <em>is</em> a herdr pane. So the honest comparisons are not Claude Code and the rest, which are the things being run. They are these three.',
+  'intro.rivalEvenTitle': "Even's own Terminal Mode",
+  'intro.rivalEven':
+    'The closest thing there is, and it comes from the people who made the glasses: <code>even-terminal</code> spawns one agent, renders its output to the G2, and turns ring gestures back into keystrokes. If you want one agent on your glasses, install it and stop reading — it is one npm install and a QR scan, and there is no herdr to set up. What it does not do is hold sessions: it is a renderer and an input bridge, one process, one working directory.',
+  'intro.rivalCmuxTitle': 'cmux',
+  'intro.rivalCmux':
+    'A native macOS terminal built for running agents in parallel — tabs, split panes, an embedded browser, a socket API, and an iPhone app that mirrors the terminals. If you work at a Mac and want the best window onto several agents while you are sitting at it, this is that. macOS only, and no glasses.',
+  'intro.rivalHerdrTitle': 'herdr on its own',
+  'intro.rivalHerdr':
+    'Everything {product} knows about sessions, herdr already does — and you can drive it from a terminal without any of this. The catch is the terminal: the grip is real, but the hand holding it has to be at a keyboard.',
+  'intro.gapTitle': 'You need never open a computer again',
+  'intro.gap':
+    'Not to watch a session — to <em>start</em> one. Once the setup below is done, the server is already awake: you make a new session from your phone (a name, a directory, which agent, which machine), say out loud what you want done, and answer from the glasses when it asks. Nothing in that day involves a laptop.',
+  'intro.gap2':
+    'That is the line the others do not cross. <code>even-terminal</code> spawns an agent in the directory you launched it from, so the work begins at the keyboard you launched it from. cmux is a window onto the Mac you are sitting at. Both are good ways to keep an eye on work you started at a desk. This is a way to start it without one — and with more than one session, on more than one machine, at the same time.',
+  'intro.seeTitle': 'Agents talking to each other, in plain sight',
+  'intro.see':
+    'When Claude Code hands work to Kimi Code, that is not something happening inside a black box. It is a pane, on a screen, that you can watch it happen in. herdr makes the conversation between agents as visible as the conversation with one.',
+  'intro.freeTitle': 'And so: not tied to a desk',
+  'intro.free':
+    'What you control, you can control from anywhere. Develop while you walk. Develop on the train. An agent works for minutes, stops to ask you something — and instead of waiting until you are back at the screen, the question arrives on your glasses and you answer it with the ring.',
   'intro.stillTitle': 'The reason it is worth anything',
   'intro.still':
     'A coding agent works for minutes at a time, then stops to ask you something. If you are not at the screen, it waits — and so does the work.',
@@ -79,6 +108,30 @@ const EN: Table = {
   'intro.net.machineDesc': 'the {product} server, and herdr underneath it',
   'how.herdr': 'herdr — every session lives in one',
   'how.agents': 'and they can talk to each other',
+  'tour.0': 'The agents run on a machine of yours. This one.',
+  'tour.1': 'Inside it, herdr holds every session — and one can drive another.',
+  'tour.2': 'The other two devices run nothing at all. They are windows onto this.',
+  'tour.3': 'An agent stops to ask something. The question travels out to you.',
+  'tour.4': 'It arrives in front of your eye. Answer with the ring, and work resumes.',
+  'shot.speakTitle': 'Mostly, you just talk to it',
+  'shot.speak':
+    'Hold the touchpad and say what you want. It goes to your own server, comes back as text, and reaches the agent as a prompt. This is how the thing is actually used — not choosing between options, but saying a sentence while walking.',
+  'shot.askTitle': 'And when it asks something, it asks here',
+  'shot.ask':
+    'This is the real thing, not a mock-up: green on black, seven lines, drawn by the glasses. The agent got as far as it could and needs a decision.',
+  'shot.chooseTitle': 'Two answers, and the ring is quicker',
+  'shot.choose':
+    'When the agent has narrowed it to a choice, a swipe and a tap beat a sentence. That is the only time the ring is the faster instrument — the rest of the time you speak.',
+  'shot.rest':
+    'The rest of the time it stays out of your way. It only speaks when it is stuck.',
+  'tour.ask': 'Apply this refactor?',
+  'tour.yes': 'yes',
+  'tour.no': 'no',
+  'tour.tap': 'tap to skip ahead',
+  'how.caption': 'A question travels out. An answer goes back. The agent never stopped for long.',
+  'how.handoff': 'one hands work to another',
+  'how.dogfoodShort':
+    'This was built this way. The machine running the agents was somewhere else, and the answers went back through a pair of glasses — including the ones that produced this screen.',
   'how.dogfoodTitle': 'This was built this way',
   'how.dogfood':
     'Hrdle is developed on Hrdle. This screen, and the sentence you are reading, were not written at a desk — the machine running the agents was somewhere else entirely, and the answers went back through a pair of glasses. A development PC has stopped being a place you have to be.',
@@ -157,6 +210,35 @@ const EN: Table = {
     '{link} — sign in with any account you like; you will use the same one on this phone later.',
   'tailscale.downloadsLabel': 'Tailscale downloads',
 
+  'groq.title': 'A key for the voice input',
+  'groq.lead':
+    'Talking to the glasses is the main way to drive this. You say what you want, it becomes text, and the agent gets it as a prompt — which needs a transcription key. It is free, and it takes two minutes.',
+  'groq.whyTitle': 'Why not the ring',
+  'groq.why':
+    'Choosing between two answers with a thumb is fine when the agent has offered two answers. Most of the time what you want to say is a sentence, and speaking it is faster than any control on a pair of glasses could be.',
+  'groq.step1': '1 &middot; Make a Groq account',
+  'groq.step1Note': 'Free, and it does not ask for a card.',
+  'groq.openConsole': 'Open the Groq console',
+  'groq.step2': '2 &middot; Create an API key',
+  'groq.step2Note':
+    'API Keys, then Create API Key. What you get starts with <code>gsk_</code>. Copy it now — the page shows it once and never again.',
+  'groq.step3': '3 &middot; Paste it here',
+  'groq.pasteNote':
+    'There is nowhere to send it yet — no server has answered. So it waits on this phone and goes across by itself the moment you connect, which is two screens away. Held in this browser only, and deleted the instant it lands.',
+  'groq.pastePlaceholder': 'gsk_...',
+  'groq.pasteSave': 'Hold it for me',
+  'groq.pasteHeld': 'Held. It will be sent when you connect.',
+  'groq.pasteCleared': 'Cleared.',
+  'groq.pasteEmpty': 'Nothing to hold — the field is empty.',
+  'groq.pasteClear': 'Forget it',
+  'groq.step3Later': '3 &middot; Keep it for the last screen',
+  'groq.sent': 'The key you pasted earlier has been sent to your server.',
+  'groq.sendFailed': 'The key you pasted earlier could not be sent: {error}. Paste it again below.',
+  'groq.step3Note':
+    'You paste it once you have connected, on the last screen of this setup. Leave the tab open, or paste it somewhere you can get at from your phone.',
+  'groq.privacyTitle': 'Where your voice goes',
+  'groq.privacy':
+    'The glasses hand raw audio to your own server, which sends it to Groq and gets text back. The key is stored on that server and is never relayed anywhere else — nobody who built {product} is in the path. If you would rather not speak to it at all, skip this: everything else works without it.',
   'install.title': 'Install {product}',
   'install.lead':
     'One command. Leave that window open when it finishes — it ends by drawing a QR code, and the next screen reads it.',
@@ -269,13 +351,42 @@ const JA: Table = {
   'step.agent': 'エージェント',
   'step.tailscale': 'Tailscale',
   'step.install': 'インストール',
+  'step.groq': '音声入力',
   'step.connect': '接続',
   'step.done': 'グラス',
   'step.outro': 'アプリで仕上げる',
 
   'intro.title': 'なぜこれを使うのか',
   'intro.lead':
-    '歩きながら開発する。電車の中で開発する。手を動かすのはエージェントで、必要なときだけ聞いてくる。その答えを、どこにいても返せます。',
+    'セッションそのものが、あなたの制御下にあります。開く、中を覗く、文字を送る、新しく作る、閉じる。そこが違いで、ほかのことはすべてそこから出てきます。',
+  'demo.one': 'セッションがひとつ',
+  'demo.split': '分割する',
+  'demo.more': 'もうひとつ作る',
+  'demo.send': 'どれにでも打ち込める',
+  'demo.watch': 'そしてそれが見える',
+  'intro.diffTitle': '何と比べるか',
+  'intro.diff':
+    'セッションを掌握できること自体は {product} の手柄ではありません。それは herdr がやっていて、ここでのセッションは herdr のペイン<em>そのもの</em>です。だから比較すべき相手は Claude Code たちではありません。あれは動かされる側です。比べるべきはこの3つです。',
+  'intro.rivalEvenTitle': 'Even 純正の Terminal Mode',
+  'intro.rivalEven':
+    '最も近いもので、しかもグラスを作った当人たちのものです。<code>even-terminal</code> はエージェントを1つ起動し、その出力を G2 に描き、リングのジェスチャーをキー入力に戻します。グラスでエージェントを1つ見たいだけなら、これを入れてここを読むのをやめてください。npm install ひとつと QR スキャンで済み、herdr の用意も要りません。やらないのはセッションの掌握です。あれはレンダラと入力ブリッジで、1プロセス・1ディレクトリです。',
+  'intro.rivalCmuxTitle': 'cmux',
+  'intro.rivalCmux':
+    'エージェントを並列に動かすための macOS ネイティブなターミナルです。タブ、分割ペイン、埋め込みブラウザ、ソケット API、そしてターミナルを同期する iPhone アプリまであります。Mac の前に座って複数のエージェントを見るなら、いちばん良い窓はこれです。macOS 専用で、グラスには出ません。',
+  'intro.rivalHerdrTitle': 'herdr 単体',
+  'intro.rivalHerdr':
+    '{product} がセッションについて知っていることは、すべて herdr が既にやっています。これを入れなくても、ターミナルから同じように操れます。引っかかるのはそのターミナルです。掌握は本物ですが、掌握する側がキーボードの前にいなければなりません。',
+  'intro.gapTitle': 'もう PC を開かなくてよくなる',
+  'intro.gap':
+    'セッションを見るためではなく、<em>始める</em>ために、です。下のセットアップを一度終えれば、サーバーはもう起きています。新しいセッションはスマホから作れます（名前、作業ディレクトリ、どのエージェント、どのマシン）。やってほしいことは声で伝え、聞かれたらグラスで答える。その一日のどこにも laptop は出てきません。',
+  'intro.gap2':
+    'ここが、ほかが越えない線です。<code>even-terminal</code> は起動したディレクトリでエージェントを立ち上げるので、仕事は起動したキーボードの前で始まります。cmux は目の前の Mac を覗く窓です。どちらも机で始めた仕事を見張る手段としては良いものです。これは、机なしで始めるための手段です。しかも複数のセッションを、複数のマシンにまたがって、同時に。',
+  'intro.seeTitle': 'エージェント同士のやり取りも、目に見える',
+  'intro.see':
+    'Claude Code が Kimi Code に仕事を渡すとき、それはブラックボックスの中の出来事ではありません。画面上のペインで、実際に起きているのが見えます。herdr は、エージェント同士の会話を、エージェントとの会話と同じだけ見えるものにします。',
+  'intro.freeTitle': 'だから、机に縛られない',
+  'intro.free':
+    '制御下にあるものは、どこからでも制御できます。歩きながら開発する。電車の中で開発する。エージェントは数分働いては何かを尋ねて止まりますが、あなたが画面の前に戻るまで待たせる代わりに、その質問はグラスに届き、リングで答えられます。',
   'intro.stillTitle': 'なぜそれに意味があるのか',
   'intro.still':
     'コーディングエージェントは数分働いては、あなたに何かを尋ねて止まります。画面の前にいなければ、エージェントは待ち続け、仕事も止まったままです。',
@@ -292,6 +403,30 @@ const JA: Table = {
   'intro.net.machineDesc': '{product} サーバーと、その下の herdr',
   'how.herdr': 'herdr — すべてのセッションはこの中',
   'how.agents': 'そして互いに話せる',
+  'tour.0': 'エージェントが動くのは、あなたのマシン。これです。',
+  'tour.1': '中では herdr がすべてのセッションを持っていて、一方が他方を動かせます。',
+  'tour.2': 'ほかの2つは何も動かしていません。これを覗く窓です。',
+  'tour.3': 'エージェントが何かを尋ねて止まる。その質問があなたに向かって出ていきます。',
+  'tour.4': '目の前に届く。リングで答えれば、仕事が再開します。',
+  'shot.speakTitle': 'ふだんは、ただ話しかけます',
+  'shot.speak':
+    'タッチパッドを押さえて、言いたいことを言う。音声はあなた自身のサーバーへ行き、文字になって戻り、プロンプトとしてエージェントに届きます。実際の使い方はこれです。選択肢を選ぶことではなく、歩きながら一文を言うこと。',
+  'shot.askTitle': 'そして尋ねられるときは、ここに出ます',
+  'shot.ask':
+    'これはモックではなく実物です。黒地に緑、7行、グラスが実際に描いたもの。エージェントは行けるところまで行って、判断を待っています。',
+  'shot.chooseTitle': '二択なら、リングのほうが速い',
+  'shot.choose':
+    'エージェントが選択肢まで絞ってくれたときは、スワイプとタップのほうが一文より速い。リングが勝つのはそのときだけで、あとは話しかけます。',
+  'shot.rest':
+    'それ以外の時間は黙っています。詰まったときだけ話しかけてきます。',
+  'tour.ask': 'このリファクタを適用する?',
+  'tour.yes': 'はい',
+  'tour.no': 'いいえ',
+  'tour.tap': 'タップで次へ',
+  'how.caption': '質問が出ていき、答えが返る。エージェントが止まっている時間は短い。',
+  'how.handoff': '一方が他方に仕事を渡す',
+  'how.dogfoodShort':
+    'これ自身も、これで作られました。エージェントを動かすマシンは別の場所にあり、答えはグラス越しに返っていきました。この画面を作ったやり取りも、そうやって行われています。',
   'how.dogfoodTitle': 'これ自身も、これで作られました',
   'how.dogfood':
     'Hrdle の開発は Hrdle の上で行われています。この画面も、いま読んでいるこの文章も、机に向かって書かれたものではありません。エージェントを動かしていたマシンはまったく別の場所にあり、返事はグラス越しに戻っていきました。開発用の PC は、もう「いなければならない場所」ではありません。',
@@ -370,6 +505,35 @@ const JA: Table = {
     '{link} — アカウントは何でも構いませんが、後でこのスマホでも同じものを使います。',
   'tailscale.downloadsLabel': 'Tailscale のダウンロード',
 
+  'groq.title': '音声入力のためのキー',
+  'groq.lead':
+    'このツールを動かす主な手段はグラスに話しかけることです。話した内容が文字になり、エージェントへのプロンプトとして届きます。そのために音声認識のキーが要ります。無料で、2分で終わります。',
+  'groq.whyTitle': 'リングではなく声である理由',
+  'groq.why':
+    '2つの選択肢から指で選ぶのは、エージェントが2つ用意してくれたときには十分です。ただ実際に言いたいことはたいてい一文で、それを声に出すほうが、グラスのどんな操作より速い。',
+  'groq.step1': '1 &middot; Groq のアカウントを作る',
+  'groq.step1Note': '無料で、カード番号も聞かれません。',
+  'groq.openConsole': 'Groq コンソールを開く',
+  'groq.step2': '2 &middot; API キーを作る',
+  'groq.step2Note':
+    'API Keys から Create API Key。<code>gsk_</code> で始まる文字列が出ます。この場でコピーしてください。ページは一度しか見せてくれません。',
+  'groq.step3': '3 &middot; ここに貼る',
+  'groq.pasteNote':
+    'まだ送り先がありません。どのサーバーも応答していないからです。そこでこのスマホの中で待たせておき、接続した瞬間に自分で渡りに行きます。接続は2画面先です。このブラウザの中だけに置かれ、渡った瞬間に消えます。',
+  'groq.pastePlaceholder': 'gsk_...',
+  'groq.pasteSave': '預かってもらう',
+  'groq.pasteHeld': '預かりました。接続したときに送ります。',
+  'groq.pasteCleared': '消しました。',
+  'groq.pasteEmpty': '預かるものがありません。入力欄が空です。',
+  'groq.pasteClear': '忘れてもらう',
+  'groq.step3Later': '3 &middot; 最後の画面まで取っておく',
+  'groq.sent': '先ほど貼ったキーをサーバーに送りました。',
+  'groq.sendFailed': '先ほど貼ったキーを送れませんでした: {error}。下からもう一度貼ってください。',
+  'groq.step3Note':
+    '貼り付けるのは接続したあと、このセットアップの最後の画面です。タブを開いたままにするか、スマホから取り出せるところに控えておいてください。',
+  'groq.privacyTitle': '声がどこへ行くか',
+  'groq.privacy':
+    'グラスは生の音声をあなた自身のサーバーに渡し、サーバーが Groq に送って文字を受け取ります。キーはそのサーバーに保存され、ほかのどこにも中継されません。{product} を作った人間も経路にいません。話しかけるつもりがなければ、この手順は飛ばして構いません。ほかはすべて動きます。',
   'install.title': '{product} を入れる',
   'install.lead':
     'コマンド1つです。終わってもそのウィンドウは開いたままにしてください。最後に QR コードを描き、次の画面でそれを読み取ります。',
