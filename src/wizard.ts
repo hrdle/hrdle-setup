@@ -481,15 +481,12 @@ function screenHtml(id: StepId): { title: string; html: string } {
             ${cmd('https://tailscale.com/download')}
           </div>
           <div class="wiz-card">
-            <h3>${t('connect.scanTitle')}</h3>
-            <p class="wiz-note">${t('connect.scanNote')}</p>
+            <h3>${t('connect.addressTitle')}</h3>
+            <p class="wiz-note">${t('connect.addressNote', { binary })}</p>
             ${cmd(`${binary} qr`)}
-            <button type="button" class="wiz-scan" id="wiz-scan">${t('connect.scanButton')}</button>
-            <div id="wiz-scan-status" class="wiz-status" style="margin:0 0 6px"></div>
-            <div class="wiz-or">${t('connect.orType')}</div>
-            <input id="wiz-url" class="wiz-input" type="url" inputmode="url" autocapitalize="off"
-                   autocorrect="off" spellcheck="false"
-                   placeholder="https://your-machine.tailnet.ts.net:${DEFAULT_PORT}" />
+            <input id="wiz-url" class="wiz-input" type="text" inputmode="url" autocapitalize="off"
+                   autocorrect="off" spellcheck="false" placeholder="91.210.90" />
+            <p class="wiz-note">${t('connect.addressForms')}</p>
           </div>
           <div id="wiz-connect-status" class="wiz-status"></div>
           <div class="wiz-card" style="margin-top:14px">

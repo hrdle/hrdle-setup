@@ -253,22 +253,22 @@ const EN: Table = {
 
   'connect.title': 'Connect to {product}',
   'connect.lead':
-    'Two things on this phone: join the tailnet, then point the camera at the code on that machine.',
+    'Two things on this phone: join the tailnet, then tell the app where that machine is.',
   'connect.tailscaleTitle': '1 · Tailscale on this phone',
   'connect.tailscaleNote':
     'Sign in with the same account you used on that machine, or the two cannot see each other. If neither link opens from here, copy this into a browser:',
-  'connect.scanTitle': '2 · Scan the code',
-  'connect.scanNote':
-    'The installer printed one when it finished. To bring it back, run this on that machine:',
-  'connect.scanButton': 'Scan the QR code',
+  'connect.addressTitle': '2 · The short address',
+  'connect.addressNote':
+    'Run this on that machine. Under the code it prints a short address — nine characters, like 91.210.90. That is what goes in the box.',
+  'connect.addressForms':
+    'A hostname works too, and so does a full URL if you have one to paste. Scanning the code with this phone\u2019s own camera app opens the server in a browser, which is a different thing from setting the glasses up.',
   'connect.connectButton': 'Connect',
-  'connect.orType': 'or type the address',
   'connect.troubleTitle': 'If it will not connect',
   'connect.trouble':
-    'Check that Tailscale says connected on this phone, that <code>{binary} status</code> on that machine says it is running, and that the host name matches exactly — the certificate is issued for that name.',
-  'connect.opening': 'Opening the camera...',
-  'connect.addressRead': 'Address read',
-  'connect.enterFirst': 'Enter the URL first',
+    'Check that Tailscale says connected on this phone, that <code>{binary} status</code> on that machine says it is running, and that the address matches what the machine printed.',
+  'connect.resolving': 'Looking for that machine...',
+  'connect.notFound': 'That machine did not answer',
+  'connect.enterFirst': 'Enter the address first',
   'connect.connecting': 'Connecting...',
   'connect.connected': 'Connected',
   'connect.failed': 'Could not connect: {error}',
@@ -548,22 +548,22 @@ const JA: Table = {
 
   'connect.title': '{product} につなぐ',
   'connect.lead':
-    'このスマホですることは2つ。tailnet に参加し、マシンに表示されたコードにカメラを向けます。',
+    'このスマホですることは2つ。tailnet に参加し、マシンの居場所をアプリに伝えます。',
   'connect.tailscaleTitle': '1 · このスマホに Tailscale',
   'connect.tailscaleNote':
     'マシンで使ったのと同じアカウントでサインインしてください。違うと互いに見えません。どちらのリンクもここから開かない場合は、これをブラウザに貼り付けてください:',
-  'connect.scanTitle': '2 · コードを読み取る',
-  'connect.scanNote':
-    'インストーラが終了時に表示しています。もう一度出すには、マシンで次を実行します:',
-  'connect.scanButton': 'QR コードを読み取る',
+  'connect.addressTitle': '2 · 短いアドレス',
+  'connect.addressNote':
+    'マシンで次を実行してください。コードの下に短いアドレスが表示されます。91.210.90 のような9文字で、それを下の欄に入力します。',
+  'connect.addressForms':
+    'ホスト名でも構いませんし、URL を貼り付けられるならそれでも動きます。なお、コードをこのスマホの標準カメラアプリで読むとブラウザでサーバーが開きますが、それはグラスの設定とは別のことです。',
   'connect.connectButton': '接続する',
-  'connect.orType': 'または手で入力する',
   'connect.troubleTitle': 'つながらないとき',
   'connect.trouble':
-    'このスマホの Tailscale が接続済みか、マシンで <code>{binary} status</code> が動作中と表示するか、ホスト名が完全に一致しているかを確認してください。証明書はそのホスト名に対して発行されています。',
-  'connect.opening': 'カメラを起動しています...',
-  'connect.addressRead': 'アドレスを読み取りました',
-  'connect.enterFirst': 'URL を入力してください',
+    'このスマホの Tailscale が接続済みか、マシンで <code>{binary} status</code> が動作中と表示するか、アドレスがマシンの表示と一致しているかを確認してください。',
+  'connect.resolving': 'マシンを探しています...',
+  'connect.notFound': 'そのマシンから応答がありません',
+  'connect.enterFirst': '先にアドレスを入力してください',
   'connect.connecting': '接続しています...',
   'connect.connected': '接続しました',
   'connect.failed': '接続できませんでした: {error}',

@@ -34,6 +34,7 @@ export type ToHost =
   | { type: 'hrdle:save-url'; url: string }
   | { type: 'hrdle:clear-url' }
   | { type: 'hrdle:scan-qr' }
+  | { type: 'hrdle:resolve-host'; host: string }
   | { type: 'hrdle:connect'; url: string }
   | { type: 'hrdle:settings-get' }
   | { type: 'hrdle:settings-put'; patch: SettingsPatch }
@@ -43,6 +44,7 @@ export type FromHost =
   | { type: 'hrdle:host-ready' }
   | { type: 'hrdle:url'; url: string | null }
   | { type: 'hrdle:qr-result'; url?: string; error?: string; cancelled?: boolean }
+  | { type: 'hrdle:resolved'; url?: string; error?: string }
   | { type: 'hrdle:connect-result'; ok: boolean; server?: ServerSummary; error?: string }
   | { type: 'hrdle:settings'; view?: GlassesSettingsView; error?: string }
 
@@ -175,6 +177,20 @@ export async function scanViaHost(): Promise<{
   const answer = await ask({ type: 'hrdle:scan-qr' }, 'hrdle:qr-result', SCAN_TIMEOUT_MS)
   if (!answer) return { cancelled: true }
   return { url: answer.url, error: answer.error, cancelled: answer.cancelled }
+}
+
+/**
+ * Ask the host to turn what was typed into the server's real address.
+ *
+ * Short forms (`91.210.90`), bare hostnames and full URLs all arrive here; the
+ * host knows how to resolve each because it is the one that can reach a tailnet
+ * address at all. This page cannot: it is served from a public origin, and
+ * Chrome refuses public-to-private outright.
+ */
+export async function resolveViaHost(host: string): Promise<{ url?: string; error?: string }> {
+  const answer = await ask({ type: 'hrdle:resolve-host', host }, 'hrdle:resolved', 15_000)
+  if (!answer) return { error: 'the app did not answer' }
+  return { url: answer.url, error: answer.error }
 }
 
 /** Ask the host to reach a server and report what it found. */

@@ -19,7 +19,7 @@ import {
   hostUrl,
   putSettingsViaHost,
   saveHostUrl,
-  scanViaHost,
+  resolveViaHost,
 } from './host-bridge.ts'
 import { wireSettingsPanel } from './settings-ui.ts'
 import {
@@ -217,14 +217,15 @@ function wireConnect(): void {
   const input = app?.querySelector<HTMLInputElement>('#wiz-url')
   const button = app?.querySelector<HTMLButtonElement>('#wiz-connect')
   const statusEl = app?.querySelector<HTMLDivElement>('#wiz-connect-status')
-  const scan = app?.querySelector<HTMLButtonElement>('#wiz-scan')
-  const scanStatus = app?.querySelector<HTMLDivElement>('#wiz-scan-status')
   if (!input || !button || !statusEl) return
 
   input.value = url
   statusEl.innerHTML = status
 
   input.addEventListener('blur', () => {
+    // Only tidy something that is already a URL. A short address is not one
+    // yet, and `normalizeUrl` would turn `91.210.90` into a host of that name.
+    if (!/^https?:\/\//i.test(input.value.trim())) return
     const normalized = normalizeUrl(input.value, DEFAULT_PORT)
     if (normalized) input.value = normalized
   })
@@ -232,38 +233,31 @@ function wireConnect(): void {
     if (event.key === 'Enter') button.click()
   })
 
-  scan?.addEventListener('click', async () => {
-    scan.setAttribute('disabled', '')
-    if (scanStatus) {
-      scanStatus.innerHTML = `<span style="color:#ff0">${t('connect.opening')}</span>`
-    }
-    // The camera belongs to the host: this page cannot open it, and asking is
-    // the whole reason the frame exists.
-    const outcome = await scanViaHost()
-    scan.removeAttribute('disabled')
-    if (outcome.cancelled) {
-      if (scanStatus) scanStatus.innerHTML = ''
-      return
-    }
-    if (outcome.error || !outcome.url) {
-      if (scanStatus) {
-        scanStatus.innerHTML = `<span style="color:#ff5555">${outcome.error ?? t('scan.noCode')}</span>`
-      }
-      return
-    }
-    input.value = normalizeUrl(outcome.url, DEFAULT_PORT)
-    if (scanStatus) scanStatus.innerHTML = `<span class="wiz-ok">${t('connect.addressRead')}</span>`
-    button.click()
-  })
-
   button.addEventListener('click', async () => {
-    const candidate = normalizeUrl(input.value, DEFAULT_PORT)
-    if (!candidate) {
+    const typed = input.value.trim()
+    if (!typed) {
       statusEl.innerHTML = `<span style="color:#f44">${t('connect.enterFirst')}</span>`
       return
     }
-    input.value = candidate
     button.setAttribute('disabled', '')
+
+    // A short address or a hostname has to become the real one first, and only
+    // the host can ask: the server's certificate is issued for its FQDN, so
+    // reaching it by anything else fails TLS before it fails anything useful.
+    let candidate = ''
+    if (/^https?:\/\//i.test(typed)) {
+      candidate = normalizeUrl(typed, DEFAULT_PORT)
+    } else {
+      statusEl.innerHTML = `<span style="color:#ff0">${t('connect.resolving')}</span>`
+      const resolved = await resolveViaHost(typed)
+      if (!resolved.url) {
+        button.removeAttribute('disabled')
+        statusEl.innerHTML = `<span style="color:#f44">${resolved.error ?? t('connect.notFound')}</span>`
+        return
+      }
+      candidate = normalizeUrl(resolved.url, DEFAULT_PORT)
+    }
+    input.value = candidate
     statusEl.innerHTML = `<span style="color:#ff0">${t('connect.connecting')}</span>`
     const ok = await tryConnect(candidate)
     if (ok) {
