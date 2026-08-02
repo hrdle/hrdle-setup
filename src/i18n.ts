@@ -64,6 +64,9 @@ const EN: Table = {
   'intro.title': 'Why you would want this',
   'intro.lead':
     'The session itself is yours to control. Open one, look inside it, type into it, start another, close it. That is the difference, and everything else follows from it.',
+  'intro.nameTitle': 'Where the name comes from',
+  'intro.name':
+    '{product} is <strong>herdr</strong> plus <strong>handle</strong>. herdr runs the sessions; this is the handle you take hold of them by, from the G2. Not a view of them — a grip on them: what you would do at the keyboard, you do here.',
   'demo.one': 'one session',
   'demo.split': 'split it',
   'demo.more': 'start another',
@@ -174,6 +177,9 @@ const EN: Table = {
   'machine.linuxArch': 'x86_64',
   'machine.macos': 'macOS',
   'machine.macosArch': 'Apple silicon',
+  'machine.headlessTitle': 'It does not need a screen',
+  'machine.headless':
+    'No display, no keyboard, nobody sitting at it. Headless is the case this was built for: you reach the machine over Tailscale and drive it from your phone and your glasses, so the only thing it owes you is staying awake.',
   'machine.awakeTitle': 'It must not sleep',
   'machine.awake1':
     'An agent keeps working while you are away, and nothing reaches you from a sleeping machine — a session started in the morning is only there in the afternoon if the machine stayed awake the whole time.',
@@ -359,6 +365,9 @@ const JA: Table = {
   'intro.title': 'なぜこれを使うのか',
   'intro.lead':
     'セッションそのものが、あなたの制御下にあります。開く、中を覗く、文字を送る、新しく作る、閉じる。そこが違いで、ほかのことはすべてそこから出てきます。',
+  'intro.nameTitle': '名前の由来',
+  'intro.name':
+    '{product} は <strong>herdr</strong> と <strong>handle</strong> です。セッションを動かしているのは herdr で、これはそれを掴むための取っ手。G2 から握ります。眺めるためのものではありません。キーボードの前でやることは、ここでできます。',
   'demo.one': 'セッションがひとつ',
   'demo.split': '分割する',
   'demo.more': 'もうひとつ作る',
@@ -469,6 +478,9 @@ const JA: Table = {
   'machine.linuxArch': 'x86_64',
   'machine.macos': 'macOS',
   'machine.macosArch': 'Apple シリコン',
+  'machine.headlessTitle': '画面はいりません',
+  'machine.headless':
+    'ディスプレイもキーボードも、そこに座る人も不要です。ヘッドレスこそが本来の想定です。マシンへは Tailscale 越しに届き、操作はスマホとグラスから行うので、そのマシンに求めるのは起き続けていることだけです。',
   'machine.awakeTitle': 'スリープさせないこと',
   'machine.awake1':
     'エージェントはあなたが離れている間も動き続けます。スリープしたマシンからは何も届きません。朝に始めたセッションが午後もそこにあるのは、マシンがずっと起きていた場合だけです。',

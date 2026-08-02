@@ -242,6 +242,10 @@ function screenHtml(id: StepId): { title: string; html: string } {
         html: `
           <div class="wiz-hero">${brandIcon('hero', 118)}</div>
           <p class="wiz-lead">${t('intro.lead')}</p>
+          <div class="wiz-card">
+            <h3>${t('intro.nameTitle')}</h3>
+            <p>${t('intro.name', { product })}</p>
+          </div>
 
           ${paneDemo()}
           <div class="wiz-card">
@@ -348,6 +352,10 @@ function screenHtml(id: StepId): { title: string; html: string } {
               <span>${t('machine.linux')}</span><span>${t('machine.linuxArch')}</span>
               <span>${t('machine.macos')}</span><span>${t('machine.macosArch')}</span>
             </div>
+          </div>
+          <div class="wiz-card">
+            <h3>${t('machine.headlessTitle')}</h3>
+            <p>${t('machine.headless')}</p>
           </div>
           <div class="wiz-card">
             <h3>${t('machine.awakeTitle')}</h3>
