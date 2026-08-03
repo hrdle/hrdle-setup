@@ -26,7 +26,7 @@ The boundary is not a preference, it is what a web page cannot do:
 |---|---|---|
 | What this is, the machine, a coding agent, Tailscale, install | here | nothing but words and commands |
 | Connect | the app | the server address must be written to the **host's** store, which is where the G2 reads it from. A different origin's `localStorage` does not exist as far as the glasses are concerned |
-| Ready | the app | the QR scan goes through the host SDK's `captureImageFromCamera` |
+| Ready | the app | it talks to the server, and a tailnet address is unreachable from this public origin — Chrome refuses public-to-private outright |
 
 So this site ends by handing over: open the app, press *Already running* on its
 first screen, and the last two steps happen there.

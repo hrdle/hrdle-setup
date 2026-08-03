@@ -247,10 +247,10 @@ const EN: Table = {
     'The glasses hand raw audio to your own server, which sends it to Groq and gets text back. The key is stored on that server and is never relayed anywhere else — nobody who built {product} is in the path. If you would rather not speak to it at all, skip this: everything else works without it.',
   'install.title': 'Install {product}',
   'install.lead':
-    'One command. Leave that window open when it finishes — it ends by drawing a QR code, and the next screen reads it.',
+    'One command. Leave that window open when it finishes — it ends by printing the address, and the next screen asks for it.',
   'install.whatTitle': 'What it does',
   'install.what':
-    'Installs {binary} into <code>~/bin</code> and {herdr} if it is missing, registers the service so it survives a reboot, and prints the address as a QR code.',
+    'Installs {binary} into <code>~/bin</code> and {herdr} if it is missing, registers the service so it survives a reboot, and prints the address the next screen asks for.',
   'install.sudoNote':
     'If it says a sudo command is still needed, run that line and then <code>{binary} setup</code>.',
   'install.passwordTitle': 'Want a password on it?',
@@ -265,9 +265,9 @@ const EN: Table = {
     'Sign in with the same account you used on that machine, or the two cannot see each other. If neither link opens from here, copy this into a browser:',
   'connect.addressTitle': '2 · The short address',
   'connect.addressNote':
-    'Run this on that machine. Under the code it prints a short address — nine characters, like 91.210.90. That is what goes in the box.',
+    'Run this on that machine. It prints a short address — nine characters, like 91.210.90. That is what goes in the box.',
   'connect.addressForms':
-    'A hostname works too, and so does a full URL if you have one to paste. Scanning the code with this phone\u2019s own camera app opens the server in a browser, which is a different thing from setting the glasses up.',
+    'A hostname works too, and so does a full URL if you have one to paste. The same command prints the full URL under it — that one is for a browser, which is a different thing from setting the glasses up.',
   'connect.connectButton': 'Connect',
   'connect.troubleTitle': 'If it will not connect',
   'connect.trouble':
@@ -290,25 +290,17 @@ const EN: Table = {
     'Open {product} from the G2 app menu. Swipe to move between sessions, tap to select, double tap to go back.',
   'done.disconnect': 'Disconnect',
 
-  'scan.cameraFailed': 'The camera could not be opened: {error}',
-  'scan.readFailed': 'Could not read that photo: {error}',
-  'scan.noCode': 'No QR code in that photo. Fill more of the frame with it and try again.',
-  'scan.notAnAddress': 'That code is not a web address. Scan the one printed by `{binary} qr`.',
-  'scan.imageUnreadable': 'that image could not be read',
-  'scan.imageEmpty': 'that image was empty',
-  'scan.cannotProcess': 'this device cannot process the photo',
-
   'outro.title': 'Now finish it on your phone',
   'outro.lead':
-    'The installer ended by drawing a QR code. The last two steps happen in the {product} app on your phone, which reads it.',
+    'The installer ended by printing a short address. The last two steps happen in the {product} app on your phone, which asks for it.',
   'outro.step1Title': '1 · Open the app',
   'outro.step1':
     'Open {product} from the EVEN app menu on your phone. It shows the same wizard you have been reading — press <b>Already running</b> on the first screen to skip straight to the end.',
-  'outro.step2Title': '2 · Join the tailnet and scan',
+  'outro.step2Title': '2 · Join the tailnet and type the address',
   'outro.step2':
-    'Install Tailscale on the phone with the same account, then point the camera at the code. That is the whole of it — reading the code connects.',
-  'outro.qrGoneTitle': 'Lost the code?',
-  'outro.qrGone': 'Run this on the machine again:',
+    'Install Tailscale on the phone with the same account, then type in the short address the installer printed — nine characters, like 91.210.90. That is the whole of it.',
+  'outro.addressGoneTitle': 'Lost the address?',
+  'outro.addressGone': 'Run this on the machine again:',
   'outro.getApp': 'Get the app for the G2',
   'settings.title': 'Voice input',
   'settings.subtitle':
@@ -548,10 +540,10 @@ const JA: Table = {
     'グラスは生の音声をあなた自身のサーバーに渡し、サーバーが Groq に送って文字を受け取ります。キーはそのサーバーに保存され、ほかのどこにも中継されません。{product} を作った人間も経路にいません。話しかけるつもりがなければ、この手順は飛ばして構いません。ほかはすべて動きます。',
   'install.title': '{product} を入れる',
   'install.lead':
-    'コマンド1つです。終わってもそのウィンドウは開いたままにしてください。最後に QR コードを描き、次の画面でそれを読み取ります。',
+    'コマンド1つです。終わってもそのウィンドウは開いたままにしてください。最後にアドレスが表示され、次の画面でそれを入力します。',
   'install.whatTitle': 'このコマンドがすること',
   'install.what':
-    '{binary} を <code>~/bin</code> に入れ、{herdr} が無ければそれも入れ、再起動後も動くようサービス登録し、最後にアドレスを QR コードで表示します。',
+    '{binary} を <code>~/bin</code> に入れ、{herdr} が無ければそれも入れ、再起動後も動くようサービス登録し、最後に次の画面で使うアドレスを表示します。',
   'install.sudoNote':
     'sudo のコマンドがまだ必要だと表示されたら、その行を実行してから <code>{binary} setup</code> を実行してください。',
   'install.passwordTitle': 'パスワードを付けたい場合',
@@ -566,9 +558,9 @@ const JA: Table = {
     'マシンで使ったのと同じアカウントでサインインしてください。違うと互いに見えません。どちらのリンクもここから開かない場合は、これをブラウザに貼り付けてください:',
   'connect.addressTitle': '2 · 短いアドレス',
   'connect.addressNote':
-    'マシンで次を実行してください。コードの下に短いアドレスが表示されます。91.210.90 のような9文字で、それを下の欄に入力します。',
+    'マシンで次を実行してください。短いアドレスが表示されます。91.210.90 のような9文字で、それを下の欄に入力します。',
   'connect.addressForms':
-    'ホスト名でも構いませんし、URL を貼り付けられるならそれでも動きます。なお、コードをこのスマホの標準カメラアプリで読むとブラウザでサーバーが開きますが、それはグラスの設定とは別のことです。',
+    'ホスト名でも構いませんし、URL を貼り付けられるならそれでも動きます。なお、同じコマンドはその下に完全な URL も表示しますが、あれはブラウザ用で、グラスの設定とは別のことです。',
   'connect.connectButton': '接続する',
   'connect.troubleTitle': 'つながらないとき',
   'connect.trouble':
@@ -591,27 +583,17 @@ const JA: Table = {
     'G2 のアプリメニューから {product} を開きます。スワイプでセッションを移動、タップで選択、ダブルタップで戻ります。',
   'done.disconnect': '接続を解除',
 
-  'scan.cameraFailed': 'カメラを開けませんでした: {error}',
-  'scan.readFailed': 'その写真を読み取れませんでした: {error}',
-  'scan.noCode':
-    'その写真に QR コードが見つかりません。コードが画面いっぱいに写るようにして、もう一度試してください。',
-  'scan.notAnAddress':
-    'そのコードはウェブアドレスではありません。`{binary} qr` が表示するコードを読み取ってください。',
-  'scan.imageUnreadable': '画像を読み込めませんでした',
-  'scan.imageEmpty': '画像が空でした',
-  'scan.cannotProcess': 'この端末では写真を処理できません',
-
   'outro.title': '続きはスマホで',
   'outro.lead':
-    'インストーラは最後に QR コードを表示します。残り2ステップは、それを読み取るスマホの {product} アプリで行います。',
+    'インストーラは最後に短いアドレスを表示します。残り2ステップは、それを入力するスマホの {product} アプリで行います。',
   'outro.step1Title': '1 · アプリを開く',
   'outro.step1':
     'スマホの EVEN アプリのメニューから {product} を開きます。ここで読んだのと同じウィザードが出るので、最初の画面で <b>もう動いている</b> を押せば末尾まで飛べます。',
-  'outro.step2Title': '2 · tailnet に参加してコードを読む',
+  'outro.step2Title': '2 · tailnet に参加してアドレスを入力する',
   'outro.step2':
-    'スマホに Tailscale を入れて同じアカウントでサインインし、カメラをコードに向けます。読み取れば接続まで完了します。',
-  'outro.qrGoneTitle': 'コードを見失ったら',
-  'outro.qrGone': 'マシンでもう一度実行してください:',
+    'スマホに Tailscale を入れて同じアカウントでサインインし、インストーラが表示した短いアドレスを入力します。91.210.90 のような9文字で、それだけです。',
+  'outro.addressGoneTitle': 'アドレスを見失ったら',
+  'outro.addressGone': 'マシンでもう一度実行してください:',
   'outro.getApp': 'G2 用アプリを入手',
   'settings.title': '音声入力',
   'settings.subtitle':

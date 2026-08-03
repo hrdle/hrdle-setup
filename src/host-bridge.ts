@@ -8,7 +8,6 @@
 //   - **Writing the server address.** It has to go into the *host's* own store,
 //     because that is where the G2 reads it from when it starts. Ours is a
 //     different origin and does not exist as far as the glasses are concerned.
-//   - **Reading the QR code.** That is the host SDK's camera.
 //   - **Every request to the server.** This was going to be ours — the server
 //     answers `Access-Control-Allow-Origin: *`, so CORS is not the problem. The
 //     problem is Private Network Access: this page is served from a public
@@ -24,8 +23,8 @@
 // The host's origin is not knowable (the app is loaded from the Even Hub
 // container, which reports its own thing), so messages out go to '*' and
 // messages in are checked against `window.parent` instead. What travels is a
-// Tailscale URL and a QR payload — worth guarding against confusion, not worth
-// pretending is a secret.
+// Tailscale URL — worth guarding against confusion, not worth pretending is a
+// secret.
 
 /** What the guide asks the host to do. */
 export type ToHost =
@@ -33,7 +32,6 @@ export type ToHost =
   | { type: 'hrdle:get-url' }
   | { type: 'hrdle:save-url'; url: string }
   | { type: 'hrdle:clear-url' }
-  | { type: 'hrdle:scan-qr' }
   | { type: 'hrdle:resolve-host'; host: string }
   | { type: 'hrdle:connect'; url: string }
   | { type: 'hrdle:settings-get' }
@@ -43,7 +41,6 @@ export type ToHost =
 export type FromHost =
   | { type: 'hrdle:host-ready' }
   | { type: 'hrdle:url'; url: string | null }
-  | { type: 'hrdle:qr-result'; url?: string; error?: string; cancelled?: boolean }
   | { type: 'hrdle:resolved'; url?: string; error?: string }
   | { type: 'hrdle:connect-result'; ok: boolean; server?: ServerSummary; error?: string }
   | { type: 'hrdle:settings'; view?: GlassesSettingsView; error?: string }
@@ -80,9 +77,6 @@ export interface GlassesSettingsView {
  * and the page is the plain guide again.
  */
 const HELLO_TIMEOUT_MS = 1500
-
-/** How long a scan may take. The host opens a camera; a person may take a while. */
-const SCAN_TIMEOUT_MS = 120_000
 
 type Pending = { resolve: (value: FromHost) => void; want: FromHost['type'] }
 
@@ -166,17 +160,6 @@ export function saveHostUrl(url: string): void {
 
 export function clearHostUrl(): void {
   host?.postMessage({ type: 'hrdle:clear-url' } satisfies ToHost, '*')
-}
-
-/** Ask the host to photograph a QR code and read it. */
-export async function scanViaHost(): Promise<{
-  url?: string
-  error?: string
-  cancelled?: boolean
-}> {
-  const answer = await ask({ type: 'hrdle:scan-qr' }, 'hrdle:qr-result', SCAN_TIMEOUT_MS)
-  if (!answer) return { cancelled: true }
-  return { url: answer.url, error: answer.error, cancelled: answer.cancelled }
 }
 
 /**

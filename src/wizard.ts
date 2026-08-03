@@ -5,9 +5,9 @@
 // a page you can open *on that machine* is one you can copy out of. The rest of
 // the setup lives in the app because it needs things a web page cannot have —
 // the host's own store, which is where the G2 reads the server address from, and
-// the host's camera for the QR code. Those two screens stay there; everything
-// before them is here, where a wording change costs a deploy rather than a
-// rebuilt ehpk, a store upload and a version bump.
+// the host's reach into a tailnet, which this public origin does not have. Those
+// two screens stay there; everything before them is here, where a wording change
+// costs a deploy rather than a rebuilt ehpk, a store upload and a version bump.
 //
 // The wording is kept in step with `glasses/src/i18n.ts` in hrdle/hrdle on
 // purpose. Someone reads five screens here and two in the app, and a sentence
@@ -491,7 +491,7 @@ function screenHtml(id: StepId): { title: string; html: string } {
           <div class="wiz-card">
             <h3>${t('connect.addressTitle')}</h3>
             <p class="wiz-note">${t('connect.addressNote', { binary })}</p>
-            ${cmd(`${binary} qr`)}
+            ${cmd(`${binary} address`)}
             <input id="wiz-url" class="wiz-input" type="text" inputmode="url" autocapitalize="off"
                    autocorrect="off" spellcheck="false" placeholder="91.210.90" />
             <p class="wiz-note">${t('connect.addressForms')}</p>
@@ -538,9 +538,9 @@ function screenHtml(id: StepId): { title: string; html: string } {
             <p>${t('outro.step2')}</p>
           </div>
           <div class="wiz-card">
-            <h3>${t('outro.qrGoneTitle')}</h3>
-            <p class="wiz-note">${t('outro.qrGone')}</p>
-            ${cmd(`${binary} qr`)}
+            <h3>${t('outro.addressGoneTitle')}</h3>
+            <p class="wiz-note">${t('outro.addressGone')}</p>
+            ${cmd(`${binary} address`)}
           </div>
           ${linkButton(`https://github.com/${REPO}`, `${product} on GitHub`)}
         `,
