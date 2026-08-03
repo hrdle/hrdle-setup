@@ -48,10 +48,19 @@ project and cannot read that file, the same bargain `install.sh` makes there.
 bun install
 bun run dev        # vite, :5173
 bun run build      # -> dist/
-bun run deploy     # build, then wrangler deploy
+bun run deploy     # build, then wrangler deploy — only when bypassing main
 ```
 
 `wrangler.jsonc` declares static assets and no Worker script at all — Workers
 rather than Pages, which is where Cloudflare puts new static projects now.
 
-Deploying needs `CLOUDFLARE_API_TOKEN` in the environment.
+## Deploying
+
+**A push to `main` is the deploy.** Cloudflare builds and publishes it; there is
+nothing to run. That is the whole reason this repository exists — a wording
+change should cost a commit, not a release.
+
+`bun run deploy` pushes from a working copy instead, which is for the rare case
+where the change must not be on `main` first. It needs `CLOUDFLARE_API_TOKEN` in
+the environment; the automatic build does not, because Cloudflare holds its own
+credentials.
