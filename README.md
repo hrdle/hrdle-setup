@@ -3,7 +3,11 @@
 The setup guide for [Hrdle](https://github.com/hrdle/hrdle), served from
 Cloudflare Workers.
 
-**https://hrdle-setup.abe00makoto.workers.dev**
+**[Open the live setup guide](https://hrdle-setup.abe00makoto.workers.dev/)**
+
+Use that deployment to review the wording and preparation flow directly. The
+Connect and Ready screens become active only when the guide is embedded in the
+Hrdle app.
 
 ## Why this is not part of the app
 
