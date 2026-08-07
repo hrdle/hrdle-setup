@@ -62,7 +62,7 @@ const EN: Table = {
 
   'intro.title': 'Why you would want this',
   'intro.lead':
-    'The session itself is yours to control. Open one, look inside it, type into it, start another, close it. That is the difference, and everything else follows from it.',
+    'You are no longer in front of the PC.<br>And still, the work moves on.',
   'intro.nameTitle': 'Where the name comes from',
   'intro.name':
     '{product} is <strong>herdr</strong> plus <strong>handle</strong>. herdr runs the sessions; this is the handle you take hold of them by, from the G2. Not a view of them — a grip on them: what you would do at the keyboard, you do here.',
@@ -94,27 +94,12 @@ const EN: Table = {
   'intro.freeTitle': 'And so: not tied to a desk',
   'intro.free':
     'What you control, you can continue away from your desk. An agent works for minutes, then stops to ask you something. Instead of waiting until you are back at the screen, the question can reach your glasses and you can answer it with the ring.',
-  'intro.stillTitle': 'The reason it is worth anything',
-  'intro.still':
-    'A coding agent works for minutes at a time, then stops to ask you something. If you are not at the screen, it waits — and so does the work.',
-  'intro.problemTitle': 'What that looks like',
-  'intro.problem':
-    'You set a refactor going and walk away. Ten minutes later it is sitting on a question it asked nine minutes ago, and nothing has happened since.',
-  'intro.answerTitle': 'What {product} does about it',
-  'intro.answer':
-    'The question arrives on your glasses. You answer it with the ring — in the kitchen, on a walk, in a meeting — and the agent carries on. The screen stops being the place you have to be.',
   'intro.whatTitle': 'What it is, concretely',
   'intro.what':
     '{product} runs your coding agents — Claude Code, Codex, Grok, Kimi — on a machine of yours, and puts them on your phone and on the G2.',
   'intro.net.machine': 'A machine · awake 24/7',
   'intro.net.machineDesc': 'the {product} server, and herdr underneath it',
   'how.herdr': 'herdr — every session lives in one',
-  'how.agents': 'and they can talk to each other',
-  'tour.0': 'The agents run on a machine of yours. This one.',
-  'tour.1': 'Inside it, herdr holds every session — and one can drive another.',
-  'tour.2': 'The other two devices run nothing at all. They are windows onto this.',
-  'tour.3': 'An agent stops to ask something. The question travels out to you.',
-  'tour.4': 'It arrives in front of your eye. Answer with the ring, and work resumes.',
   'shot.speakTitle': 'Mostly, you just talk to it',
   'shot.speak':
     'Hold the touchpad and say what you want. It goes to your own server, comes back as text, and reaches the agent as a prompt. This is how the thing is actually used — not choosing between options, but saying a sentence while walking.',
@@ -126,26 +111,13 @@ const EN: Table = {
     'When the agent has narrowed it to a choice, a swipe and a tap beat a sentence. That is the only time the ring is the faster instrument — the rest of the time you speak.',
   'shot.rest':
     'The rest of the time it stays out of your way. It only speaks when it is stuck.',
-  'tour.ask': 'Apply this refactor?',
-  'tour.yes': 'yes',
-  'tour.no': 'no',
-  'tour.tap': 'tap to skip ahead',
   'how.caption': 'A question travels out. An answer goes back. The agent never stopped for long.',
   'how.handoff': 'one hands work to another',
   'how.dogfoodShort':
     'This was built this way. The machine running the agents was somewhere else, and the answers went back through a pair of glasses — including the ones that produced this screen.',
   'how.dogfoodTitle': 'This was built this way',
-  'how.dogfood':
-    'Hrdle is developed on Hrdle. This screen, and the sentence you are reading, were not written at a desk — the machine running the agents was somewhere else entirely, and the answers went back through a pair of glasses. A development PC has stopped being a place you have to be.',
-  'how.freeTitle': 'Nothing is walled off',
-  'how.free':
-    'Starting a session is an ordinary operation, and so is one session talking to another. Claude Code can drive Kimi Code. Codex can be handed a task by something that is not you. An agent can read what another agent is looking at, answer its question, and hand back — across a machine, or across two of them over the tailnet. There is no sandbox between them saying no.',
-  'intro.net.machineNote':
-    'A desktop at home or a VPS you rent. The agents actually run here and keep working while you are not watching, so it must not sleep.',
   'intro.net.tailscale': 'Tailscale',
   'intro.net.tailscaleWire': 'over the internet',
-  'intro.net.tailscaleNote':
-    '<b>Tailscale</b> is a VPN across your own devices. That leg crosses the open internet, so the phone reaches the machine from anywhere — encrypted end to end, with no port opened for anyone else to find.',
   'intro.net.phone': 'Your phone',
   'intro.net.phoneDesc': 'the {product} app',
   'intro.net.bluetooth': 'Bluetooth',
@@ -155,10 +127,6 @@ const EN: Table = {
   'how.title': 'How the pieces fit',
   'how.lead':
     'The agent feels like it is right here — one line in front of your eye, answered with a thumb. It is not. It is on a machine somewhere else entirely, and these two hops are what close the distance.',
-  'how.closingTitle': 'Which is the trick',
-  'how.closing':
-    'Nothing runs on the glasses and nothing runs on the phone. They are a window onto a machine that may be in another building, and the window is what makes it feel like arm\'s reach.',
-  'intro.getTitle': 'What you get',
   'intro.get1': 'Run several agent sessions at once and switch between them',
   'intro.get2': 'Watch what each one is doing, live',
   'intro.get3': 'Approve or reject a prompt from the glasses, with the ring',
@@ -302,7 +270,6 @@ const EN: Table = {
     'Install Tailscale on the phone with the same account, then type in the short address the installer printed — nine characters, like 91.210.90. That is the whole of it.',
   'outro.addressGoneTitle': 'Lost the address?',
   'outro.addressGone': 'Run this on the machine again:',
-  'outro.getApp': 'Get the app for the G2',
   'settings.title': 'Voice input',
   'settings.subtitle':
     'Transcription runs through Groq. The key is stored on this host and sent to Groq only with transcription requests.',
@@ -357,7 +324,7 @@ const JA: Table = {
 
   'intro.title': 'なぜこれを使うのか',
   'intro.lead':
-    'セッションそのものが、あなたの制御下にあります。開く、中を覗く、文字を送る、新しく作る、閉じる。そこが違いで、ほかのことはすべてそこから出てきます。',
+    'パソコンの前に、あなたはもういない。<br>それでも、仕事は進んでいる。',
   'intro.nameTitle': '名前の由来',
   'intro.name':
     '{product} という名前は <strong>herdr</strong> と <strong>handle</strong> に由来します。セッションを動かす herdr を、G2 から操作するためのハンドルです。ただ眺めるだけではなく、キーボードの前で行う操作を離れた場所から実行できます。',
@@ -389,27 +356,12 @@ const JA: Table = {
   'intro.freeTitle': 'だから、机に縛られない',
   'intro.free':
     '机を離れても作業を続けられます。エージェントが数分働いたあとで質問して止まっても、画面の前に戻るまで待たせる必要はありません。質問をグラスで受け取り、リングで答えられます。',
-  'intro.stillTitle': 'なぜそれに意味があるのか',
-  'intro.still':
-    'コーディングエージェントは数分働いては、あなたに何かを尋ねて止まります。画面の前にいなければ、エージェントは待ち続け、仕事も止まったままです。',
-  'intro.problemTitle': '実際に起きること',
-  'intro.problem':
-    'リファクタを走らせて席を立つ。10分後に戻ると、9分前に投げられた質問の前で止まっていて、その間なにも進んでいない。',
-  'intro.answerTitle': '{product} がすること',
-  'intro.answer':
-    'その質問がグラスに届きます。台所でも、散歩中でも、会議中でも、リングで答えればエージェントは続きを始めます。画面の前が「いなければならない場所」ではなくなります。',
   'intro.whatTitle': '具体的には',
   'intro.what':
     '{product} は Claude Code、Codex、Grok、Kimi といったコーディングエージェントをあなたのマシンで動かし、それをスマホと G2 に映します。',
   'intro.net.machine': 'マシン · 24時間起動',
   'intro.net.machineDesc': '{product} サーバーと、その下の herdr',
   'how.herdr': 'herdr — すべてのセッションはこの中',
-  'how.agents': 'そして互いに話せる',
-  'tour.0': 'エージェントが動くのは、あなたのマシン。これです。',
-  'tour.1': '中では herdr がすべてのセッションを持っていて、一方が他方を動かせます。',
-  'tour.2': 'ほかの2つは何も動かしていません。これを覗く窓です。',
-  'tour.3': 'エージェントが何かを尋ねて止まる。その質問があなたに向かって出ていきます。',
-  'tour.4': '目の前に届く。リングで答えれば、仕事が再開します。',
   'shot.speakTitle': 'ふだんは、ただ話しかけます',
   'shot.speak':
     'タッチパッドを押さえて、言いたいことを言う。音声はあなた自身のサーバーへ行き、文字になって戻り、プロンプトとしてエージェントに届きます。実際の使い方はこれです。選択肢を選ぶことではなく、歩きながら一文を言うこと。',
@@ -421,26 +373,13 @@ const JA: Table = {
     'エージェントが選択肢まで絞ってくれたときは、スワイプとタップのほうが一文より速い。リングが勝つのはそのときだけで、あとは話しかけます。',
   'shot.rest':
     'それ以外の時間は黙っています。詰まったときだけ話しかけてきます。',
-  'tour.ask': 'このリファクタを適用する?',
-  'tour.yes': 'はい',
-  'tour.no': 'いいえ',
-  'tour.tap': 'タップで次へ',
   'how.caption': '質問が出ていき、答えが返る。エージェントが止まっている時間は短い。',
   'how.handoff': '一方が他方に仕事を渡す',
   'how.dogfoodShort':
     'これ自身も、これで作られました。エージェントを動かすマシンは別の場所にあり、答えはグラス越しに返っていきました。この画面を作ったやり取りも、そうやって行われています。',
   'how.dogfoodTitle': 'これ自身も、これで作られました',
-  'how.dogfood':
-    'Hrdle の開発は Hrdle の上で行われています。この画面も、いま読んでいるこの文章も、机に向かって書かれたものではありません。エージェントを動かしていたマシンはまったく別の場所にあり、返事はグラス越しに戻っていきました。開発用の PC は、もう「いなければならない場所」ではありません。',
-  'how.freeTitle': '制限がない',
-  'how.free':
-    'セッションを起動するのも、セッション同士が話すのも、ごく普通の操作です。Claude Code から Kimi Code を動かす。Codex に、あなた以外の誰かが仕事を渡す。別のエージェントが見ているものを読み、その質問に答えて返す — 同じマシンの中でも、tailnet 越しに2台にまたがってでも。あいだに「駄目だ」と言うサンドボックスはありません。',
-  'intro.net.machineNote':
-    '自宅のデスクトップでも、借りた VPS でも構いません。エージェントが実際に動くのはここで、あなたが見ていない間も動き続けるため、スリープさせてはいけません。',
   'intro.net.tailscale': 'Tailscale',
   'intro.net.tailscaleWire': 'インターネット経由',
-  'intro.net.tailscaleNote':
-    '<b>Tailscale</b> は自分のデバイス同士をつなぐ VPN です。この区間はインターネットを通るので、どこからでもマシンに届きます。通信は端から端まで暗号化され、他人に見つかるポートは開きません。',
   'intro.net.phone': 'スマホ',
   'intro.net.phoneDesc': '{product} アプリ',
   'intro.net.bluetooth': 'Bluetooth',
@@ -450,10 +389,6 @@ const JA: Table = {
   'how.title': '全体のつながり',
   'how.lead':
     'エージェントはすぐ目の前にいるように感じます。視界に1行出て、指先で答えられる。けれど実際は、まったく別の場所にあるマシンの中にいます。その距離を埋めているのが、この2つのつなぎ目です。',
-  'how.closingTitle': 'そこが面白いところ',
-  'how.closing':
-    'グラスでも、スマホでも、何ひとつ動いていません。2つとも、別の建物にあるかもしれないマシンを覗く窓です。その窓が、手の届く距離にいるように感じさせています。',
-  'intro.getTitle': 'できること',
   'intro.get1': '複数のエージェントセッションを同時に動かし、切り替える',
   'intro.get2': 'それぞれが何をしているかをリアルタイムで見る',
   'intro.get3': 'グラスから、リングだけで承認・却下する',
@@ -597,7 +532,6 @@ const JA: Table = {
     'スマホに Tailscale を入れて同じアカウントでサインインし、インストーラが表示した短いアドレスを入力します。91.210.90 のような9文字で、それだけです。',
   'outro.addressGoneTitle': 'アドレスを見失ったら',
   'outro.addressGone': 'マシンでもう一度実行してください:',
-  'outro.getApp': 'G2 用アプリを入手',
   'settings.title': '音声入力',
   'settings.subtitle':
     '音声認識には Groq を使います。キーはこのホストに保存され、音声認識のリクエスト時だけ Groq へ送信されます。',
