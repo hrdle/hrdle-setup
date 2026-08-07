@@ -40,7 +40,7 @@ export type ToHost =
 
 /** What the host answers. */
 export type FromHost =
-  | { type: 'hrdle:host-ready' }
+  | { type: 'hrdle:host-ready'; app?: AppSummary }
   | { type: 'hrdle:url'; url: string | null }
   | { type: 'hrdle:resolved'; url?: string; error?: string }
   | { type: 'hrdle:connect-result'; ok: boolean; server?: ServerSummary; error?: string }
@@ -50,6 +50,24 @@ export interface ServerSummary {
   version: string
   sessions: number
   usage: string
+}
+
+/**
+ * Which build of the glasses app framed us.
+ *
+ * The guide redeploys whenever a sentence changes; the app is rebuilt, packed,
+ * uploaded and promoted. So the two are never in step, and the version on the
+ * device is the half nobody can see. It rides along with the greeting.
+ *
+ * The commit is there because a version number says which number a build
+ * claims, not which code it holds: an unreleased build and the packed ehpk both
+ * answer the same `version`. Absent from a host that predates this — an older
+ * ehpk greets us exactly as before, and the row is left out.
+ */
+export interface AppSummary {
+  version: string
+  /** Short git hash, `+dirty` when the source had uncommitted edits, `nogit`. */
+  commit: string
 }
 
 export interface SettingsPatch {
@@ -83,6 +101,7 @@ const HELLO_TIMEOUT_MS = 1500
 type Pending = { resolve: (value: FromHost) => void; want: FromHost['type'] }
 
 let host: Window | null = null
+let hostAppSummary: AppSummary | null = null
 const waiting: Pending[] = []
 
 function onMessage(event: MessageEvent): void {
@@ -92,6 +111,7 @@ function onMessage(event: MessageEvent): void {
 
   if (data.type === 'hrdle:host-ready') {
     host = window.parent
+    hostAppSummary = data.app ?? null
     return
   }
   const index = waiting.findIndex((p) => p.want === data.type)
@@ -124,6 +144,11 @@ export function connectToHost(): Promise<boolean> {
 
 export function hasHost(): boolean {
   return host !== null
+}
+
+/** The glasses app build that framed us, if it told us. */
+export function hostApp(): AppSummary | null {
+  return hostAppSummary
 }
 
 function ask<T extends FromHost['type']>(
