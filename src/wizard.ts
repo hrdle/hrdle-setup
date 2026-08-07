@@ -250,10 +250,10 @@ function screenHtml(id: StepId): { title: string; html: string } {
             <p>${t('intro.gap', { product })}</p>
           </div>
 
-          ${talkDemo()}
           <div class="wiz-card">
             <h3>${t('intro.seeTitle')}</h3>
             <p>${t('intro.see')}</p>
+            ${talkDemo()}
           </div>
 
           <div class="wiz-card">
@@ -687,6 +687,7 @@ const CSS = `
   /* The demo runs a ten-second loop of its own — a claim being shown rather
      than a system being diagrammed, so it does not share the figure's clock. */
   .demo { margin:2px 0 14px; }
+  .wiz-card .demo { margin:10px 0 0; }
   .panes { display:flex; gap:4px; height:74px; }
   .pane { position:relative; flex:1; min-width:0; border:1px solid #2f2f2f; border-radius:7px;
           background:#0e0e0e; padding:7px 8px; font-family:ui-monospace, Menlo, monospace;
