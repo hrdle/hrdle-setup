@@ -80,7 +80,7 @@ function describeKey(v: GlassesSettingsView): string {
 }
 
 function describePrompt(v: GlassesSettingsView): string {
-  if (v.sttPromptSource === 'setting') return t('settings.promptSetting')
+  if (v.sttPromptSource === 'off') return t('settings.promptOff')
   if (v.sttPromptSource === 'env') return t('settings.promptEnv')
   return t('settings.promptComposed')
 }
