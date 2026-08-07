@@ -248,7 +248,6 @@ function screenHtml(id: StepId): { title: string; html: string } {
           <div class="wiz-card wiz-warn">
             <h3>${t('intro.gapTitle')}</h3>
             <p>${t('intro.gap', { product })}</p>
-            <p>${t('intro.gap2', { product })}</p>
           </div>
 
           ${talkDemo()}

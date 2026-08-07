@@ -81,9 +81,7 @@ const EN: Table = {
     'Everything {product} knows about sessions, herdr already does — and you can drive it from a terminal without any of this. The catch is the terminal: the grip is real, but the hand holding it has to be at a keyboard.',
   'intro.gapTitle': 'Start work without opening a laptop',
   'intro.gap':
-    'Not just to watch a session, but to <em>start</em> one. Once this setup is done and the server is awake, you can create a session from your phone, say what you want done, and answer from the glasses when it asks. Routine work can begin without opening a laptop.',
-  'intro.gap2':
-    'That is the distinction: <code>even-terminal</code> and cmux are good ways to keep an eye on work started at a computer. {product} can also start that work remotely, with more than one session and more than one machine.',
+    'Not just watching — starting. Create a session from your phone, ask by voice, answer its questions from the glasses. The PC stays closed.',
   'intro.seeTitle': 'Agents talking to each other, in plain sight',
   'intro.see':
     'When Claude Code hands work to Kimi Code, that is not something happening inside a black box. It is a pane, on a screen, that you can watch it happen in. herdr makes the conversation between agents as visible as the conversation with one.',
@@ -339,9 +337,7 @@ const JA: Table = {
     '{product} が扱うセッションは、もともと herdr が管理しています。{product} を入れなくても、ターミナルから操作できます。違いは操作する場所で、herdr 単体では基本的にキーボードの前にいる必要があります。',
   'intro.gapTitle': 'PC を開かずに仕事を始める',
   'intro.gap':
-    'セッションを見るだけでなく、<em>始める</em>こともできます。セットアップを終え、サーバーが起動していれば、スマホからセッションを作り、してほしいことを声で伝え、質問にはグラスから答えられます。日常的な作業なら、PC を開かずに始められます。',
-  'intro.gap2':
-    '違いはそこです。<code>even-terminal</code> と cmux は、PC で始めた仕事を見守る用途に向いています。{product} は仕事を離れた場所から始めることもでき、複数のセッションや複数のマシンを扱えます。',
+    '見るだけでなく、始められます。スマホでセッションを作り、声で頼み、質問にはグラスで答える。パソコンは、開かないままでいい。',
   'intro.seeTitle': 'エージェント同士のやり取りも、目に見える',
   'intro.see':
     'Claude Code が Kimi Code に仕事を渡すとき、それはブラックボックスの中の出来事ではありません。画面上のペインで、実際に起きているのが見えます。herdr は、エージェント同士の会話を、エージェントとの会話と同じだけ見えるものにします。',
