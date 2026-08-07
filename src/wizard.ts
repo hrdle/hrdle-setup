@@ -149,25 +149,6 @@ function glassesScreen(): string {
 }
 
 /**
- * Sessions being made, split and typed into.
- *
- * The claim on this screen is that a session is yours to open, split and send
- * to. Written down that is four verbs; shown, it is a pane appearing beside
- * another one and a line of text landing in it. The demo runs the verbs in
- * order and starts over.
- */
-function paneDemo(): string {
-  return `<div class="demo">
-    <div class="panes">
-      <div class="pane d1"><b>claude</b><i class="caret"></i></div>
-      <div class="pane d2"><b>kimi</b><i class="caret"></i></div>
-      <div class="pane d3"><b>codex</b><i class="caret"></i></div>
-    </div>
-    <div class="demo-cap"><span class="c0">${t('demo.one')}</span><span class="c1">${t('demo.split')}</span><span class="c2">${t('demo.more')}</span><span class="c3">${t('demo.send')}</span></div>
-  </div>`
-}
-
-/**
  * One agent handing work to another, where you can see it.
  *
  * Two panes and a thing crossing between them. The point is not that it is
@@ -248,7 +229,6 @@ function screenHtml(id: StepId): { title: string; html: string } {
             <p>${t('intro.name', { product })}</p>
           </div>
 
-          ${paneDemo()}
           <div class="wiz-card">
             <h3>${t('intro.diffTitle')}</h3>
             <p>${t('intro.diff', { product })}</p>
@@ -705,36 +685,17 @@ const CSS = `
               border:1px solid #1e3a24; }
   .shot figcaption { font-size:12.5px; color:#8d8d8d; line-height:1.65; margin-top:10px; }
   .shot figcaption b { display:block; color:#ff6167; font-size:13px; margin-bottom:4px; }
-  /* Demos. Both run a ten-second loop of their own — these are claims being
-     shown rather than a system being diagrammed, so they do not need to share
-     the figure's clock. */
+  /* The demo runs a ten-second loop of its own — a claim being shown rather
+     than a system being diagrammed, so it does not share the figure's clock. */
   .demo { margin:2px 0 14px; }
   .panes { display:flex; gap:4px; height:74px; }
   .pane { position:relative; flex:1; min-width:0; border:1px solid #2f2f2f; border-radius:7px;
           background:#0e0e0e; padding:7px 8px; font-family:ui-monospace, Menlo, monospace;
           overflow:hidden; }
   .pane b { display:block; font-size:9.5px; color:#7d7d7d; font-weight:400; }
-  .caret { position:absolute; left:8px; top:26px; width:6px; height:11px; background:#ff8a8f;
-           animation:caret 1s steps(2) infinite; }
-  .d2, .d3 { flex-grow:0; opacity:0; padding-left:0; padding-right:0; border-width:0; }
-  .d2 { animation:pane-in 10s linear infinite; animation-delay:0s }
-  .d3 { animation:pane-in 10s linear infinite; animation-delay:1.6s }
-  @keyframes caret { 0% { opacity:1 } 50% { opacity:0 } }
-  @keyframes pane-in {
-    0%, 22%   { flex-grow:0; opacity:0; border-width:0; padding-left:0; padding-right:0 }
-    30%, 88%  { flex-grow:1; opacity:1; border-width:1px; padding-left:8px; padding-right:8px }
-    96%, 100% { flex-grow:0; opacity:0; border-width:0; padding-left:0; padding-right:0 }
-  }
   .demo-cap { position:relative; height:15px; margin-top:7px; }
   .demo-cap span { position:absolute; left:0; right:0; text-align:center; font-size:10.5px;
                    color:#ff8a8f; opacity:0; animation:cap 10s linear infinite; }
-  /* Scoped on purpose. The rule above sets 'animation' as a shorthand, which
-     carries an implicit zero delay, and it beats a bare class selector on
-     specificity — so every caption ran at once and printed on top of the others,
-     which is exactly what the device showed. */
-  .demo-cap .c1 { animation-delay:2.2s }
-  .demo-cap .c2 { animation-delay:4.2s }
-  .demo-cap .c3 { animation-delay:6.4s }
   @keyframes cap { 0%,1% { opacity:0 } 4%,18% { opacity:1 } 21%,100% { opacity:0 } }
   /* The hand-off, seen. */
   .talk { position:relative }
@@ -751,10 +712,8 @@ const CSS = `
     25%, 100% { left:74%; opacity:0 }
   }
   @media (prefers-reduced-motion: reduce) {
-    .d2, .d3 { flex-grow:1; opacity:1; border-width:1px; padding-left:8px; padding-right:8px }
-    .say-out, .say-in { opacity:1 }
-    .caret, .msg, .demo-cap span, .d2, .d3, .say-out, .say-in { animation:none }
-    .c3 { opacity:1 }
+    .say-out, .say-in, .demo-cap span { opacity:1 }
+    .msg, .demo-cap span, .say-out, .say-in { animation:none }
   }
   /* The two little screens. Both keep to the twelve-second loop. */
   .mini { margin-top:12px; border-radius:8px; overflow:hidden; }

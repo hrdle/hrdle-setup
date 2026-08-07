@@ -66,10 +66,6 @@ const EN: Table = {
   'intro.nameTitle': 'Where the name comes from',
   'intro.name':
     '{product} = <strong>herdr</strong> + <strong>handle</strong>. A handle, held from the G2, for the thing that herds your sessions. The hurdle of getting started is in the name too.',
-  'demo.one': 'one session',
-  'demo.split': 'split it',
-  'demo.more': 'start another',
-  'demo.send': 'type into any of them',
   'demo.watch': 'and you can watch it happen',
   'intro.diffTitle': 'What this is next to',
   'intro.diff':
@@ -328,10 +324,6 @@ const JA: Table = {
   'intro.nameTitle': '名前の由来',
   'intro.name':
     '{product} = herdr + handle です。セッションを束ねる herdr を、G2 から握るハンドル、という名前です。導入にハードル(hurdle)があることも、由来のひとつです。',
-  'demo.one': 'セッションがひとつ',
-  'demo.split': '分割する',
-  'demo.more': 'もうひとつ作る',
-  'demo.send': 'どれにでも打ち込める',
   'demo.watch': 'そしてそれが見える',
   'intro.diffTitle': '何と比べるか',
   'intro.diff':
