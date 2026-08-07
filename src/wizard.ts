@@ -1,4 +1,5 @@
-// The setup guide: five screens of preparation, then a hand-off to the phone.
+// The setup guide: two explanation screens, five setup tasks, then a hand-off
+// to the phone.
 //
 // Why this is a site and not part of the glasses app: the commands on these
 // screens are typed on a machine that is usually not the phone reading them, and
@@ -9,9 +10,9 @@
 // two screens stay there; everything before them is here, where a wording change
 // costs a deploy rather than a rebuilt ehpk, a store upload and a version bump.
 //
-// The wording is kept in step with `glasses/src/i18n.ts` in hrdle/hrdle on
-// purpose. Someone reads five screens here and two in the app, and a sentence
-// that changes voice at the boundary is worse than either version alone.
+// The app embeds this guide, so the preparation screens have one source of
+// truth. The settings panel is also copied into hrdle/hrdle's simulator and its
+// shared wording must stay in step there.
 
 import { BRAND_CSS, brandIcon } from './brand.ts'
 import { settingsPanelHtml } from './settings-ui.ts'
@@ -254,7 +255,7 @@ function screenHtml(id: StepId): { title: string; html: string } {
           </div>
           <div class="wiz-card">
             <h3>${t('intro.rivalEvenTitle')}</h3>
-            <p>${t('intro.rivalEven')}</p>
+            <p>${t('intro.rivalEven', { product })}</p>
           </div>
           <div class="wiz-card">
             <h3>${t('intro.rivalCmuxTitle')}</h3>
@@ -267,7 +268,7 @@ function screenHtml(id: StepId): { title: string; html: string } {
           <div class="wiz-card wiz-warn">
             <h3>${t('intro.gapTitle')}</h3>
             <p>${t('intro.gap', { product })}</p>
-            <p>${t('intro.gap2')}</p>
+            <p>${t('intro.gap2', { product })}</p>
           </div>
 
           ${talkDemo()}
@@ -452,7 +453,10 @@ function screenHtml(id: StepId): { title: string; html: string } {
           }
           <div class="wiz-card wiz-warn">
             <h3>${t('groq.privacyTitle')}</h3>
-            <p>${t('groq.privacy', { product })}</p>
+            <p>${t('groq.privacy', {
+              product,
+              dataPolicy: link('https://console.groq.com/docs/your-data', t('groq.dataPolicy')),
+            })}</p>
           </div>
         `,
       }
@@ -471,7 +475,7 @@ function screenHtml(id: StepId): { title: string; html: string } {
           <div class="wiz-card">
             <h3>${t('install.passwordTitle')}</h3>
             <p class="wiz-note">${t('install.password')}</p>
-            ${cmd(`${binary} setup -P yourpassword`)}
+            ${cmd(`${binary} setup -P 'REPLACE_WITH_A_STRONG_PASSWORD'`)}
           </div>
         `,
       }
@@ -825,6 +829,13 @@ export function shellHtml(id: StepId): string {
     index > 0
       ? `<button type="button" class="wiz-ghost" id="wiz-back">${t('nav.back')}</button>`
       : ''
+  // Returning app users need a direct route to Connect. The hand-off screen on
+  // the public site explicitly points to this button, so it must live in the
+  // embedded guide rather than in the native wrapper around it.
+  const skip =
+    embedded && id === 'intro'
+      ? `<button type="button" class="wiz-ghost" id="wiz-skip">${t('nav.skip')}</button>`
+      : ''
   // The connect screen's action is connecting, and the last screen has nowhere
   // to go — so neither carries a "next".
   const next =
@@ -863,7 +874,7 @@ export function shellHtml(id: StepId): string {
         <h1 class="wiz-title">${title}</h1>
         ${html}
       </div>
-      ${id === 'done' || !(back || next) ? '' : `<div class="wiz-foot">${back}${next}</div>`}
+      ${id === 'done' || !(skip || back || next) ? '' : `<div class="wiz-foot">${skip}${back}${next}</div>`}
     </div>
     <style>${CSS}${BRAND_CSS}</style>
   `

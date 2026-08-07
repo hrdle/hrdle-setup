@@ -1,9 +1,9 @@
 // Entry point.
 //
-// One page in two situations. Opened directly it is a guide: five screens of
-// preparation and a hand-off to the phone. Framed by the Hrdle glasses app it is
-// the whole wizard, and the last two screens do real work — testing a server and
-// storing its address.
+// One page in two situations. Opened directly it is a guide: two explanation
+// screens, five setup tasks and a hand-off to the phone. Framed by the Hrdle
+// glasses app it is the whole wizard, and the last two screens do real work —
+// testing a server and storing its address.
 //
 // Which it is gets decided before the first render, by asking whoever framed us
 // to say hello. Nothing about the two paths is a build flag; the same bundle
@@ -144,6 +144,9 @@ function render(): void {
   })
   app.querySelector('#wiz-back')?.addEventListener('click', () => {
     if (index > 0) goTo(list[index - 1].id)
+  })
+  app.querySelector('#wiz-skip')?.addEventListener('click', () => {
+    goTo('connect')
   })
 
   for (const button of app.querySelectorAll<HTMLButtonElement>('[data-lang]')) {

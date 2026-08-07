@@ -9,10 +9,9 @@
 // and the ehpk pays for every kilobyte it carries. What a wizard needs is a
 // lookup, a language, and a way to change it.
 //
-// Kept deliberately in step with `glasses/src/i18n.ts` in hrdle/hrdle: the same
-// keys, the same wording. Someone reads five of these screens here and the last
-// two in the app, and a sentence that changes voice at the boundary is worse
-// than either version alone.
+// The app embeds this guide, so the setup prose has one source of truth here.
+// The `settings.*` subset is also used by the copy of the voice-settings panel
+// in hrdle/hrdle's simulator; keep that shared subset in step there.
 
 export type Lang = 'en' | 'ja'
 
@@ -40,15 +39,15 @@ type Table = Record<string, string>
 const EN: Table = {
   'brand.for': 'for EVEN G2',
   'nav.start': 'Start setup',
-  'nav.next': 'Done — next',
+  'nav.next': 'Next',
   'nav.back': 'Back',
-  'nav.skip': 'Already running',
+  'nav.skip': 'Already set up',
   'nav.step': 'Step {n} of {total} · {label}',
   'nav.onMachine': 'On that machine',
   'nav.onPhone': 'On your phone',
   'cmd.copy': 'copy',
   'cmd.copied': 'copied',
-  'cmd.copyFailed': 'failed',
+  'cmd.copyFailed': 'could not copy',
 
   'step.intro': 'What this is',
   'step.how': 'How it fits together',
@@ -77,24 +76,24 @@ const EN: Table = {
     'Holding the sessions is not {product}\'s doing — herdr does that, and a session here <em>is</em> a herdr pane. So the honest comparisons are not Claude Code and the rest, which are the things being run. They are these three.',
   'intro.rivalEvenTitle': "Even's own Terminal Mode",
   'intro.rivalEven':
-    'The closest thing there is, and it comes from the people who made the glasses: <code>even-terminal</code> spawns one agent, renders its output to the G2, and turns ring gestures back into keystrokes. If you want one agent on your glasses, install it and stop reading — it is one npm install and a QR scan, and there is no herdr to set up. What it does not do is hold sessions: it is a renderer and an input bridge, one process, one working directory.',
+    'The closest alternative comes from the people who made the glasses: <code>even-terminal</code> connects one agent process to the G2 and turns ring gestures into keystrokes. If one agent in one working directory is all you need, it is the simpler fit. {product} differs by keeping multiple sessions available and letting you start and manage them remotely.',
   'intro.rivalCmuxTitle': 'cmux',
   'intro.rivalCmux':
     'A native macOS terminal built for running agents in parallel — tabs, split panes, an embedded browser, a socket API, and an iPhone app that mirrors the terminals. If you work at a Mac and want the best window onto several agents while you are sitting at it, this is that. macOS only, and no glasses.',
   'intro.rivalHerdrTitle': 'herdr on its own',
   'intro.rivalHerdr':
     'Everything {product} knows about sessions, herdr already does — and you can drive it from a terminal without any of this. The catch is the terminal: the grip is real, but the hand holding it has to be at a keyboard.',
-  'intro.gapTitle': 'You need never open a computer again',
+  'intro.gapTitle': 'Start work without opening a laptop',
   'intro.gap':
-    'Not to watch a session — to <em>start</em> one. Once the setup below is done, the server is already awake: you make a new session from your phone (a name, a directory, which agent, which machine), say out loud what you want done, and answer from the glasses when it asks. Nothing in that day involves a laptop.',
+    'Not just to watch a session, but to <em>start</em> one. Once this setup is done and the server is awake, you can create a session from your phone, say what you want done, and answer from the glasses when it asks. Routine work can begin without opening a laptop.',
   'intro.gap2':
-    'That is the line the others do not cross. <code>even-terminal</code> spawns an agent in the directory you launched it from, so the work begins at the keyboard you launched it from. cmux is a window onto the Mac you are sitting at. Both are good ways to keep an eye on work you started at a desk. This is a way to start it without one — and with more than one session, on more than one machine, at the same time.',
+    'That is the distinction: <code>even-terminal</code> and cmux are good ways to keep an eye on work started at a computer. {product} can also start that work remotely, with more than one session and more than one machine.',
   'intro.seeTitle': 'Agents talking to each other, in plain sight',
   'intro.see':
     'When Claude Code hands work to Kimi Code, that is not something happening inside a black box. It is a pane, on a screen, that you can watch it happen in. herdr makes the conversation between agents as visible as the conversation with one.',
   'intro.freeTitle': 'And so: not tied to a desk',
   'intro.free':
-    'What you control, you can control from anywhere. Develop while you walk. Develop on the train. An agent works for minutes, stops to ask you something — and instead of waiting until you are back at the screen, the question arrives on your glasses and you answer it with the ring.',
+    'What you control, you can continue away from your desk. An agent works for minutes, then stops to ask you something. Instead of waiting until you are back at the screen, the question can reach your glasses and you can answer it with the ring.',
   'intro.stillTitle': 'The reason it is worth anything',
   'intro.still':
     'A coding agent works for minutes at a time, then stops to ask you something. If you are not at the screen, it waits — and so does the work.',
@@ -165,7 +164,7 @@ const EN: Table = {
   'intro.get3': 'Approve or reject a prompt from the glasses, with the ring',
   'intro.get4': 'Read back the conversation',
   'intro.time':
-    'Five short steps here, then two in the app on your phone. About ten minutes.',
+    'Five setup tasks here, then two in the app on your phone. About ten minutes.',
   'intro.openOnDesktop':
     'You can read this on the machine itself and copy the commands straight out of it.',
 
@@ -189,7 +188,7 @@ const EN: Table = {
   'machine.vps1':
     'A small VPS does this job well. It is already awake around the clock, it is already somewhere with a fixed home, and Tailscale installs on it exactly as it would on a desktop.',
   'machine.vps2':
-    'One or two cores and 2 GB of memory is enough for several agent sessions. Your agent accounts sign in from there rather than from your desk, which is worth knowing but is not usually a problem.',
+    'One or two cores and 2 GB of memory is a reasonable starting point for light use. Builds, tests and several busy agents may need more, so size the VPS for the projects you will run. Your agent accounts will sign in from that host.',
 
   'agent.title': 'Install a coding agent',
   'agent.lead':
@@ -208,29 +207,29 @@ const EN: Table = {
   'tailscale.linux': 'Linux',
   'tailscale.macos': 'macOS',
   'tailscale.brewNote':
-    'Install it with brew rather than the App Store — the App Store build ships no command line tool, and setup needs one.',
-  'tailscale.certTitle': 'Then allow certificates, once',
+    'The command above puts <code>tailscale</code> on your PATH. The macOS apps also include a CLI, but it may need to be enabled in Tailscale Settings or called from inside the app. Before continuing, make sure <code>tailscale version</code> works in this terminal.',
+  'tailscale.certTitle': 'If certificate access needs permission',
   'tailscale.certNote':
-    'Without this {binary} cannot issue its HTTPS certificate and will refuse to start.',
+    'This is normally needed on Linux and command-line-only installs. Some macOS app installs already allow certificate generation; if this command is unsupported there, continue to the installer. The {binary} installer prints the required action if setup cannot continue.',
   'tailscale.downloads':
     '{link} — sign in with any account you like; you will use the same one on this phone later.',
   'tailscale.downloadsLabel': 'Tailscale downloads',
 
   'groq.title': 'A key for the voice input',
   'groq.lead':
-    'Talking to the glasses is the main way to drive this. You say what you want, it becomes text, and the agent gets it as a prompt — which needs a transcription key. It is free, and it takes two minutes.',
+    'Talking to the glasses is the main way to drive this. You say what you want, it becomes text, and the agent gets it as a prompt — which needs a transcription key. Groq has a rate-limited free tier, and setup takes about two minutes.',
   'groq.whyTitle': 'Why not the ring',
   'groq.why':
     'Choosing between two answers with a thumb is fine when the agent has offered two answers. Most of the time what you want to say is a sentence, and speaking it is faster than any control on a pair of glasses could be.',
   'groq.step1': '1 &middot; Make a Groq account',
-  'groq.step1Note': 'Free, and it does not ask for a card.',
+  'groq.step1Note': 'The free tier does not require a card, but usage limits apply.',
   'groq.openConsole': 'Open the Groq console',
   'groq.step2': '2 &middot; Create an API key',
   'groq.step2Note':
     'API Keys, then Create API Key. What you get starts with <code>gsk_</code>. Copy it now — the page shows it once and never again.',
   'groq.step3': '3 &middot; Paste it here',
   'groq.pasteNote':
-    'There is nowhere to send it yet — no server has answered. So it waits on this phone and goes across by itself the moment you connect, which is two screens away. Held in this browser only, and deleted the instant it lands.',
+    'There is nowhere to send it yet — no server has answered. It will be stored temporarily in this app\'s browser storage, sent when you connect, and deleted after the server accepts it. Do not use this on a shared phone.',
   'groq.pastePlaceholder': 'gsk_...',
   'groq.pasteSave': 'Hold it for me',
   'groq.pasteHeld': 'Held. It will be sent when you connect.',
@@ -241,21 +240,22 @@ const EN: Table = {
   'groq.sent': 'The key you pasted earlier has been sent to your server.',
   'groq.sendFailed': 'The key you pasted earlier could not be sent: {error}. Paste it again below.',
   'groq.step3Note':
-    'You paste it once you have connected, on the last screen of this setup. Leave the tab open, or paste it somewhere you can get at from your phone.',
+    'You paste it after connecting, on the last screen of this setup. Keep this tab open, or save the key in a password manager you can access from your phone.',
   'groq.privacyTitle': 'Where your voice goes',
   'groq.privacy':
-    'The glasses hand raw audio to your own server, which sends it to Groq and gets text back. The key is stored on that server and is never relayed anywhere else — nobody who built {product} is in the path. If you would rather not speak to it at all, skip this: everything else works without it.',
+    'The glasses send raw audio to your server. Your server then sends the audio and API key to Groq and receives the transcript; nobody who built {product} is in that path. Groq documents its retention and Zero Data Retention options in {dataPolicy}. If you would rather not send audio to Groq, skip this step: everything else works without voice input.',
+  'groq.dataPolicy': 'Your Data in GroqCloud',
   'install.title': 'Install {product}',
   'install.lead':
-    'One command. Leave that window open when it finishes — it ends by printing the address, and the next screen asks for it.',
+    'One command. Leave that terminal open when it finishes, or save the short address it prints. You will enter that address in the phone app at the end of setup.',
   'install.whatTitle': 'What it does',
   'install.what':
-    'Installs {binary} into <code>~/bin</code> and {herdr} if it is missing, registers the service so it survives a reboot, and prints the address the next screen asks for.',
+    'Installs {binary} into <code>~/bin</code> and {herdr} if it is missing, registers the service so it survives a reboot, and prints the short address you will enter in the phone app.',
   'install.sudoNote':
     'If it says a sudo command is still needed, run that line and then <code>{binary} setup</code>.',
   'install.passwordTitle': 'Want a password on it?',
   'install.password':
-    'As installed, anything signed in to your tailnet can open it — usually your own devices, and nothing is exposed to the internet either way. To be asked for a password in the browser instead, run:',
+    'Without a password, any user or device allowed to reach this machine by your tailnet policy can open it. That may be fine for a private tailnet; use a password for a shared one. Replace the placeholder below. The password is passed on the command line and may remain in your shell history.',
 
   'connect.title': 'Connect to {product}',
   'connect.lead':
@@ -295,7 +295,7 @@ const EN: Table = {
     'The installer ended by printing a short address. The last two steps happen in the {product} app on your phone, which asks for it.',
   'outro.step1Title': '1 · Open the app',
   'outro.step1':
-    'Open {product} from the EVEN app menu on your phone. It shows the same wizard you have been reading — press <b>Already running</b> on the first screen to skip straight to the end.',
+    'Open {product} from the EVEN app menu on your phone. It shows the same wizard you have been reading — press <b>Already set up</b> on the first screen to go straight to Connect.',
   'outro.step2Title': '2 · Join the tailnet and type the address',
   'outro.step2':
     'Install Tailscale on the phone with the same account, then type in the short address the installer printed — nine characters, like 91.210.90. That is the whole of it.',
@@ -304,11 +304,11 @@ const EN: Table = {
   'outro.getApp': 'Get the app for the G2',
   'settings.title': 'Voice input',
   'settings.subtitle':
-    'Transcription runs on the server through Groq. The key never leaves that host.',
+    'Transcription runs through Groq. The key is stored on this host and sent to Groq only with transcription requests.',
   'settings.key': 'Groq API key',
   'settings.keySave': 'Save key',
   'settings.keyClear': 'Clear',
-  'settings.keyNone': 'No key set - transcription will fail with 503.',
+  'settings.keyNone': 'No key is set. Add one to use voice transcription.',
   'settings.keyEnv':
     'A key is set from the server environment (GROQ_API_KEY). Saving one here overrides it.',
   'settings.keySaved': 'A key is saved here.',
@@ -333,15 +333,15 @@ const EN: Table = {
 const JA: Table = {
   'brand.for': 'for EVEN G2',
   'nav.start': 'セットアップを始める',
-  'nav.next': 'できた — 次へ',
+  'nav.next': '次へ',
   'nav.back': '戻る',
-  'nav.skip': 'もう動いている',
+  'nav.skip': 'セットアップ済み',
   'nav.step': 'ステップ {n}/{total} · {label}',
   'nav.onMachine': 'サーバー側の作業',
   'nav.onPhone': 'スマホでの作業',
   'cmd.copy': 'コピー',
   'cmd.copied': 'コピーしました',
-  'cmd.copyFailed': '失敗',
+  'cmd.copyFailed': 'コピーできませんでした',
 
   'step.intro': 'これは何か',
   'step.how': '全体のつながり',
@@ -359,7 +359,7 @@ const JA: Table = {
     'セッションそのものが、あなたの制御下にあります。開く、中を覗く、文字を送る、新しく作る、閉じる。そこが違いで、ほかのことはすべてそこから出てきます。',
   'intro.nameTitle': '名前の由来',
   'intro.name':
-    '{product} は <strong>herdr</strong> と <strong>handle</strong> です。セッションを動かしているのは herdr で、これはそれを掴むための取っ手。G2 から握ります。眺めるためのものではありません。キーボードの前でやることは、ここでできます。',
+    '{product} という名前は <strong>herdr</strong> と <strong>handle</strong> に由来します。セッションを動かす herdr を、G2 から操作するためのハンドルです。ただ眺めるだけではなく、キーボードの前で行う操作を離れた場所から実行できます。',
   'demo.one': 'セッションがひとつ',
   'demo.split': '分割する',
   'demo.more': 'もうひとつ作る',
@@ -367,27 +367,27 @@ const JA: Table = {
   'demo.watch': 'そしてそれが見える',
   'intro.diffTitle': '何と比べるか',
   'intro.diff':
-    'セッションを掌握できること自体は {product} の手柄ではありません。それは herdr がやっていて、ここでのセッションは herdr のペイン<em>そのもの</em>です。だから比較すべき相手は Claude Code たちではありません。あれは動かされる側です。比べるべきはこの3つです。',
+    'セッションを保持・管理しているのは {product} ではなく herdr で、ここでのセッションは herdr のペイン<em>そのもの</em>です。Claude Code などは管理される側なので、比較対象は次の3つです。',
   'intro.rivalEvenTitle': 'Even 純正の Terminal Mode',
   'intro.rivalEven':
-    '最も近いもので、しかもグラスを作った当人たちのものです。<code>even-terminal</code> はエージェントを1つ起動し、その出力を G2 に描き、リングのジェスチャーをキー入力に戻します。グラスでエージェントを1つ見たいだけなら、これを入れてここを読むのをやめてください。npm install ひとつと QR スキャンで済み、herdr の用意も要りません。やらないのはセッションの掌握です。あれはレンダラと入力ブリッジで、1プロセス・1ディレクトリです。',
+    '最も近い選択肢は、グラスを作った Even の <code>even-terminal</code> です。1つのエージェントプロセスを G2 につなぎ、リングの操作をキー入力として伝えます。1つの作業ディレクトリで1つのエージェントを使えればよい場合は、こちらのほうがシンプルです。{product} は複数のセッションを維持し、離れた場所から開始・管理できる点が異なります。',
   'intro.rivalCmuxTitle': 'cmux',
   'intro.rivalCmux':
     'エージェントを並列に動かすための macOS ネイティブなターミナルです。タブ、分割ペイン、埋め込みブラウザ、ソケット API、そしてターミナルを同期する iPhone アプリまであります。Mac の前に座って複数のエージェントを見るなら、いちばん良い窓はこれです。macOS 専用で、グラスには出ません。',
   'intro.rivalHerdrTitle': 'herdr 単体',
   'intro.rivalHerdr':
-    '{product} がセッションについて知っていることは、すべて herdr が既にやっています。これを入れなくても、ターミナルから同じように操れます。引っかかるのはそのターミナルです。掌握は本物ですが、掌握する側がキーボードの前にいなければなりません。',
-  'intro.gapTitle': 'もう PC を開かなくてよくなる',
+    '{product} が扱うセッションは、もともと herdr が管理しています。{product} を入れなくても、ターミナルから操作できます。違いは操作する場所で、herdr 単体では基本的にキーボードの前にいる必要があります。',
+  'intro.gapTitle': 'PC を開かずに仕事を始める',
   'intro.gap':
-    'セッションを見るためではなく、<em>始める</em>ために、です。下のセットアップを一度終えれば、サーバーはもう起きています。新しいセッションはスマホから作れます（名前、作業ディレクトリ、どのエージェント、どのマシン）。やってほしいことは声で伝え、聞かれたらグラスで答える。その一日のどこにも laptop は出てきません。',
+    'セッションを見るだけでなく、<em>始める</em>こともできます。セットアップを終え、サーバーが起動していれば、スマホからセッションを作り、してほしいことを声で伝え、質問にはグラスから答えられます。日常的な作業なら、PC を開かずに始められます。',
   'intro.gap2':
-    'ここが、ほかが越えない線です。<code>even-terminal</code> は起動したディレクトリでエージェントを立ち上げるので、仕事は起動したキーボードの前で始まります。cmux は目の前の Mac を覗く窓です。どちらも机で始めた仕事を見張る手段としては良いものです。これは、机なしで始めるための手段です。しかも複数のセッションを、複数のマシンにまたがって、同時に。',
+    '違いはそこです。<code>even-terminal</code> と cmux は、PC で始めた仕事を見守る用途に向いています。{product} は仕事を離れた場所から始めることもでき、複数のセッションや複数のマシンを扱えます。',
   'intro.seeTitle': 'エージェント同士のやり取りも、目に見える',
   'intro.see':
     'Claude Code が Kimi Code に仕事を渡すとき、それはブラックボックスの中の出来事ではありません。画面上のペインで、実際に起きているのが見えます。herdr は、エージェント同士の会話を、エージェントとの会話と同じだけ見えるものにします。',
   'intro.freeTitle': 'だから、机に縛られない',
   'intro.free':
-    '制御下にあるものは、どこからでも制御できます。歩きながら開発する。電車の中で開発する。エージェントは数分働いては何かを尋ねて止まりますが、あなたが画面の前に戻るまで待たせる代わりに、その質問はグラスに届き、リングで答えられます。',
+    '机を離れても作業を続けられます。エージェントが数分働いたあとで質問して止まっても、画面の前に戻るまで待たせる必要はありません。質問をグラスで受け取り、リングで答えられます。',
   'intro.stillTitle': 'なぜそれに意味があるのか',
   'intro.still':
     'コーディングエージェントは数分働いては、あなたに何かを尋ねて止まります。画面の前にいなければ、エージェントは待ち続け、仕事も止まったままです。',
@@ -458,7 +458,7 @@ const JA: Table = {
   'intro.get3': 'グラスから、リングだけで承認・却下する',
   'intro.get4': '会話を読み返す',
   'intro.time':
-    'ここで5ステップ、続きはスマホのアプリで2ステップ。10分ほどです。',
+    'ここで行うセットアップ作業は5つ、続きはスマホのアプリで2つです。所要時間は10分ほどです。',
   'intro.openOnDesktop':
     'このページはマシン本体でも開けます。その場合はコマンドをそのままコピーできます。',
 
@@ -482,7 +482,7 @@ const JA: Table = {
   'machine.vps1':
     '小さな VPS で十分にこなせます。もともと24時間起動していて、住所も固定されており、Tailscale もデスクトップと同じように入ります。',
   'machine.vps2':
-    '1〜2コアとメモリ 2GB あれば複数のエージェントセッションを動かせます。エージェントのアカウントは手元ではなくその VPS からサインインすることになる点は知っておくとよいですが、通常は問題になりません。',
+    '軽い用途なら、1〜2コアとメモリ 2GB が出発点になります。ビルドやテスト、複数エージェントの同時実行にはより多くの資源が必要な場合があるため、実行するプロジェクトに合わせて選んでください。エージェントのアカウントには、その VPS からサインインします。',
 
   'agent.title': 'コーディングエージェントを入れる',
   'agent.lead':
@@ -501,29 +501,29 @@ const JA: Table = {
   'tailscale.linux': 'Linux',
   'tailscale.macos': 'macOS',
   'tailscale.brewNote':
-    'App Store 版ではなく brew で入れてください。App Store 版にはコマンドラインツールが含まれず、セットアップにはそれが必要です。',
-  'tailscale.certTitle': '証明書の発行を一度だけ許可する',
+    '上のコマンドなら <code>tailscale</code> が PATH に入ります。macOS アプリにも CLI は含まれますが、Tailscale の設定で CLI 連携を有効にするか、アプリ内の実行ファイルを指定する必要があります。先へ進む前に、このターミナルで <code>tailscale version</code> が動くことを確認してください。',
+  'tailscale.certTitle': '証明書の権限を求められた場合',
   'tailscale.certNote':
-    'これがないと {binary} は HTTPS 証明書を発行できず、起動を拒否します。',
+    '通常は Linux や CLI だけの構成で必要です。macOS アプリでは、すでに証明書を発行できる場合があります。このコマンドが macOS アプリで非対応なら、そのままインストーラへ進んでください。セットアップを続けられない場合は、{binary} のインストーラが必要な操作を表示します。',
   'tailscale.downloads':
     '{link} — アカウントは何でも構いませんが、後でこのスマホでも同じものを使います。',
   'tailscale.downloadsLabel': 'Tailscale のダウンロード',
 
   'groq.title': '音声入力のためのキー',
   'groq.lead':
-    'このツールを動かす主な手段はグラスに話しかけることです。話した内容が文字になり、エージェントへのプロンプトとして届きます。そのために音声認識のキーが要ります。無料で、2分で終わります。',
+    'このツールを動かす主な手段はグラスに話しかけることです。話した内容が文字になり、エージェントへのプロンプトとして届きます。そのために音声認識のキーが要ります。Groq には利用上限付きの無料枠があり、設定は2分ほどで終わります。',
   'groq.whyTitle': 'リングではなく声である理由',
   'groq.why':
     '2つの選択肢から指で選ぶのは、エージェントが2つ用意してくれたときには十分です。ただ実際に言いたいことはたいてい一文で、それを声に出すほうが、グラスのどんな操作より速い。',
   'groq.step1': '1 &middot; Groq のアカウントを作る',
-  'groq.step1Note': '無料で、カード番号も聞かれません。',
+  'groq.step1Note': '無料枠はカード登録なしで使えますが、利用上限があります。',
   'groq.openConsole': 'Groq コンソールを開く',
   'groq.step2': '2 &middot; API キーを作る',
   'groq.step2Note':
     'API Keys から Create API Key。<code>gsk_</code> で始まる文字列が出ます。この場でコピーしてください。ページは一度しか見せてくれません。',
   'groq.step3': '3 &middot; ここに貼る',
   'groq.pasteNote':
-    'まだ送り先がありません。どのサーバーも応答していないからです。そこでこのスマホの中で待たせておき、接続した瞬間に自分で渡りに行きます。接続は2画面先です。このブラウザの中だけに置かれ、渡った瞬間に消えます。',
+    'まだ応答したサーバーがないため、キーは一時的にこのアプリのブラウザストレージへ保存されます。接続時に送信し、サーバーが受け取ったあとで削除します。共用のスマホでは使わないでください。',
   'groq.pastePlaceholder': 'gsk_...',
   'groq.pasteSave': '預かってもらう',
   'groq.pasteHeld': '預かりました。接続したときに送ります。',
@@ -534,21 +534,22 @@ const JA: Table = {
   'groq.sent': '先ほど貼ったキーをサーバーに送りました。',
   'groq.sendFailed': '先ほど貼ったキーを送れませんでした: {error}。下からもう一度貼ってください。',
   'groq.step3Note':
-    '貼り付けるのは接続したあと、このセットアップの最後の画面です。タブを開いたままにするか、スマホから取り出せるところに控えておいてください。',
+    '貼り付けるのは接続したあと、このセットアップの最後の画面です。このタブを開いたままにするか、スマホから使えるパスワードマネージャーに保存してください。',
   'groq.privacyTitle': '声がどこへ行くか',
   'groq.privacy':
-    'グラスは生の音声をあなた自身のサーバーに渡し、サーバーが Groq に送って文字を受け取ります。キーはそのサーバーに保存され、ほかのどこにも中継されません。{product} を作った人間も経路にいません。話しかけるつもりがなければ、この手順は飛ばして構いません。ほかはすべて動きます。',
+    'グラスは生の音声をあなたのサーバーへ送り、サーバーは音声と API キーを Groq へ送って文字を受け取ります。{product} の開発者はこの経路に入りません。Groq の保存方針と Zero Data Retention の設定は {dataPolicy} で確認できます。音声を Groq へ送りたくない場合は、この手順を飛ばしてください。音声入力以外の機能は使えます。',
+  'groq.dataPolicy': 'GroqCloud のデータ取扱い',
   'install.title': '{product} を入れる',
   'install.lead':
-    'コマンド1つです。終わってもそのウィンドウは開いたままにしてください。最後にアドレスが表示され、次の画面でそれを入力します。',
+    'コマンド1つです。終わってもターミナルを開いたままにするか、最後に表示される短いアドレスを控えてください。セットアップの最後にスマホのアプリへ入力します。',
   'install.whatTitle': 'このコマンドがすること',
   'install.what':
-    '{binary} を <code>~/bin</code> に入れ、{herdr} が無ければそれも入れ、再起動後も動くようサービス登録し、最後に次の画面で使うアドレスを表示します。',
+    '{binary} を <code>~/bin</code> に入れ、{herdr} が無ければそれも入れ、再起動後も動くようサービス登録し、最後にスマホのアプリへ入力する短いアドレスを表示します。',
   'install.sudoNote':
     'sudo のコマンドがまだ必要だと表示されたら、その行を実行してから <code>{binary} setup</code> を実行してください。',
   'install.passwordTitle': 'パスワードを付けたい場合',
   'install.password':
-    'そのままの状態では、あなたの tailnet にサインインしているものなら開けます。たいていは自分のデバイスだけですし、どちらにせよインターネットには公開されません。ブラウザでパスワードを求めるようにするには、次を実行します:',
+    'パスワードを設定しない場合、tailnet のポリシーでこのマシンへの到達を許されたユーザーやデバイスは Hrdle を開けます。個人用の tailnet ならそのままでも構いませんが、共有している場合はパスワードを設定してください。下のプレースホルダーは置き換えてください。パスワードはコマンドライン経由で渡すため、シェル履歴に残る場合があります。',
 
   'connect.title': '{product} につなぐ',
   'connect.lead':
@@ -588,7 +589,7 @@ const JA: Table = {
     'インストーラは最後に短いアドレスを表示します。残り2ステップは、それを入力するスマホの {product} アプリで行います。',
   'outro.step1Title': '1 · アプリを開く',
   'outro.step1':
-    'スマホの EVEN アプリのメニューから {product} を開きます。ここで読んだのと同じウィザードが出るので、最初の画面で <b>もう動いている</b> を押せば末尾まで飛べます。',
+    'スマホの EVEN アプリのメニューから {product} を開きます。ここで読んだのと同じウィザードが出るので、最初の画面で <b>セットアップ済み</b> を押すと接続画面へ進めます。',
   'outro.step2Title': '2 · tailnet に参加してアドレスを入力する',
   'outro.step2':
     'スマホに Tailscale を入れて同じアカウントでサインインし、インストーラが表示した短いアドレスを入力します。91.210.90 のような9文字で、それだけです。',
@@ -597,11 +598,11 @@ const JA: Table = {
   'outro.getApp': 'G2 用アプリを入手',
   'settings.title': '音声入力',
   'settings.subtitle':
-    '音声認識はサーバー側で Groq を通して実行されます。キーがそのホストから出ることはありません。',
+    '音声認識には Groq を使います。キーはこのホストに保存され、音声認識のリクエスト時だけ Groq へ送信されます。',
   'settings.key': 'Groq API キー',
   'settings.keySave': 'キーを保存',
   'settings.keyClear': '消去',
-  'settings.keyNone': 'キーが未設定です。音声認識は 503 で失敗します。',
+  'settings.keyNone': 'キーが未設定です。音声入力を使うには追加してください。',
   'settings.keyEnv':
     'サーバーの環境変数 (GROQ_API_KEY) からキーが設定されています。ここで保存するとそちらより優先されます。',
   'settings.keySaved': 'キーはここに保存されています。',

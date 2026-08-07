@@ -28,15 +28,15 @@ The boundary is not a preference, it is what a web page cannot do:
 | Connect | the app | the server address must be written to the **host's** store, which is where the G2 reads it from. A different origin's `localStorage` does not exist as far as the glasses are concerned |
 | Ready | the app | it talks to the server, and a tailnet address is unreachable from this public origin — Chrome refuses public-to-private outright |
 
-So this site ends by handing over: open the app, press *Already running* on its
+So this site ends by handing over: open the app, press *Already set up* on its
 first screen, and the last two steps happen there.
 
 ## Keeping the wording in step
 
-`src/i18n.ts` is deliberately the same keys and the same sentences as
-`glasses/src/i18n.ts` in hrdle/hrdle. Someone reads five screens here and two in
-the app; a sentence that changes voice at the boundary is worse than either
-version alone. When you change one, change the other.
+The app embeds this guide, so the preparation screens have a single source of
+truth here. The voice-settings strings in `src/i18n.ts` and the panel in
+`src/settings-ui.ts` are also mirrored in `glasses/src` in hrdle/hrdle for the
+browser simulator. Keep those shared parts in step when either copy changes.
 
 `src/identity.ts` mirrors that repository's `identity.json` — the product name,
 the binary, the repo and the port. It is a copy because this is a separate
