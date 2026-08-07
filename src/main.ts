@@ -16,6 +16,7 @@ import {
   connectViaHost,
   getSettingsViaHost,
   hasHost,
+  hostApp,
   hostUrl,
   putSettingsViaHost,
   saveHostUrl,
@@ -121,11 +122,20 @@ async function tryConnect(candidate: string): Promise<boolean> {
 function paintServer(): void {
   const target = app?.querySelector<HTMLDivElement>('#wiz-server')
   if (!target || !summary) return
+  // The app row is last and labelled separately because it is the only line
+  // here that is not about the server: the other four were fetched from it, and
+  // this one is the build asking. Absent when the guide is opened as a plain web
+  // page, or framed by an ehpk from before the greeting carried it.
+  const build = hostApp()
+  const appRow = build
+    ? `<span>${t('done.app')}</span><span>v${build.version} <span style="font-family:ui-monospace,Menlo,monospace; font-size:12px; opacity:0.7">${build.commit}</span></span>`
+    : ''
   target.innerHTML = `
     <span>${t('done.server')}</span><span style="font-family:ui-monospace,Menlo,monospace; font-size:12px; word-break:break-all">${summary.url}</span>
     <span>${t('done.version')}</span><span>v${summary.version}</span>
     <span>${t('done.sessions')}</span><span>${summary.sessions}</span>
     <span>${t('done.usage')}</span><span>${summary.usage}</span>
+    ${appRow}
   `
 }
 

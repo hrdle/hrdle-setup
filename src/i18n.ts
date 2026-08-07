@@ -285,6 +285,7 @@ const EN: Table = {
   'done.version': 'Version',
   'done.sessions': 'Sessions',
   'done.usage': 'API usage',
+  'done.app': 'Glasses app',
   'done.launchTitle': 'Launch it on the glasses',
   'done.launch':
     'Open {product} from the G2 app menu. Swipe to move between sessions, tap to select, double tap to go back.',
@@ -579,6 +580,7 @@ const JA: Table = {
   'done.version': 'バージョン',
   'done.sessions': 'セッション',
   'done.usage': 'API 使用量',
+  'done.app': 'グラスアプリ',
   'done.launchTitle': 'グラスで起動する',
   'done.launch':
     'G2 のアプリメニューから {product} を開きます。スワイプでセッションを移動、タップで選択、ダブルタップで戻ります。',
