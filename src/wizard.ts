@@ -256,11 +256,6 @@ function screenHtml(id: StepId): { title: string; html: string } {
             <p>${t('intro.see')}</p>
           </div>
 
-          <div class="wiz-card wiz-warn">
-            <h3>${t('intro.freeTitle')}</h3>
-            <p>${t('intro.free')}</p>
-          </div>
-
           <div class="wiz-card">
             <h3>${t('intro.whatTitle')}</h3>
             <p>${t('intro.what', { product })}</p>

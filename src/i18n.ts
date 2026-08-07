@@ -85,9 +85,6 @@ const EN: Table = {
   'intro.seeTitle': 'Agents talking to each other, in plain sight',
   'intro.see':
     'When Claude Code hands work to Kimi Code, that is not something happening inside a black box. It is a pane, on a screen, that you can watch it happen in. herdr makes the conversation between agents as visible as the conversation with one.',
-  'intro.freeTitle': 'And so: not tied to a desk',
-  'intro.free':
-    'What you control, you can continue away from your desk. An agent works for minutes, then stops to ask you something. Instead of waiting until you are back at the screen, the question can reach your glasses and you can answer it with the ring.',
   'intro.whatTitle': 'What it is, concretely',
   'intro.what':
     '{product} runs your coding agents — Claude Code, Codex, Grok, Kimi — on a machine of yours, and puts them on your phone and on the G2.',
@@ -341,9 +338,6 @@ const JA: Table = {
   'intro.seeTitle': 'エージェント同士のやり取りも、目に見える',
   'intro.see':
     'Claude Code が Kimi Code に仕事を渡すとき、それはブラックボックスの中の出来事ではありません。画面上のペインで、実際に起きているのが見えます。herdr は、エージェント同士の会話を、エージェントとの会話と同じだけ見えるものにします。',
-  'intro.freeTitle': 'だから、机に縛られない',
-  'intro.free':
-    '机を離れても作業を続けられます。エージェントが数分働いたあとで質問して止まっても、画面の前に戻るまで待たせる必要はありません。質問をグラスで受け取り、リングで答えられます。',
   'intro.whatTitle': '具体的には',
   'intro.what':
     '{product} は Claude Code、Codex、Grok、Kimi といったコーディングエージェントをあなたのマシンで動かし、それをスマホと G2 に映します。',
