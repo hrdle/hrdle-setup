@@ -232,18 +232,18 @@ function screenHtml(id: StepId): { title: string; html: string } {
           <div class="wiz-card">
             <h3>${t('intro.diffTitle')}</h3>
             <p>${t('intro.diff', { product })}</p>
-          </div>
-          <div class="wiz-card">
-            <h3>${t('intro.rivalEvenTitle')}</h3>
-            <p>${t('intro.rivalEven', { product })}</p>
-          </div>
-          <div class="wiz-card">
-            <h3>${t('intro.rivalCmuxTitle')}</h3>
-            <p>${t('intro.rivalCmux')}</p>
-          </div>
-          <div class="wiz-card">
-            <h3>${t('intro.rivalHerdrTitle')}</h3>
-            <p>${t('intro.rivalHerdr', { product })}</p>
+            <div class="wiz-sub">
+              <h4>${t('intro.rivalEvenTitle')}</h4>
+              <p>${t('intro.rivalEven', { product })}</p>
+            </div>
+            <div class="wiz-sub">
+              <h4>${t('intro.rivalCmuxTitle')}</h4>
+              <p>${t('intro.rivalCmux')}</p>
+            </div>
+            <div class="wiz-sub">
+              <h4>${t('intro.rivalHerdrTitle')}</h4>
+              <p>${t('intro.rivalHerdr', { product })}</p>
+            </div>
           </div>
           <div class="wiz-card wiz-warn">
             <h3>${t('intro.gapTitle')}</h3>
@@ -565,6 +565,11 @@ const CSS = `
   .wiz-card h3 { font-size:13px; color:#ff6167; font-weight:600; margin:0 0 8px; }
   .wiz-card p { font-size:13px; color:#bbb; line-height:1.65; margin:0 0 8px; }
   .wiz-card p:last-child { margin-bottom:0; }
+  /* Nested items inside a card — the three comparisons live inside "what to
+     compare it to", not beside it. */
+  .wiz-sub { background:#0d0d0d; border:1px solid #232323; border-radius:9px;
+             padding:11px 12px; margin-top:10px; }
+  .wiz-sub h4 { font-size:12.5px; color:#ddd; font-weight:600; margin:0 0 6px; }
   .wiz-note { font-size:12px; color:#888; line-height:1.6; margin:8px 0 0; }
   .wiz-warn { border-color:#5a2226; background:#180c0d; }
   .wiz-warn h3 { color:#ff8a8f; }
