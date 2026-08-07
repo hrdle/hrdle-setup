@@ -65,7 +65,7 @@ const EN: Table = {
     'You are no longer in front of the PC.<br>And still, the work moves on.',
   'intro.nameTitle': 'Where the name comes from',
   'intro.name':
-    '{product} is <strong>herdr</strong> plus <strong>handle</strong>. herdr runs the sessions; this is the handle you take hold of them by, from the G2. Not a view of them — a grip on them: what you would do at the keyboard, you do here.',
+    '{product} = <strong>herdr</strong> + <strong>handle</strong>. A handle, held from the G2, for the thing that herds your sessions. The hurdle of getting started is in the name too.',
   'demo.one': 'one session',
   'demo.split': 'split it',
   'demo.more': 'start another',
@@ -327,7 +327,7 @@ const JA: Table = {
     'パソコンの前に、あなたはもういない。<br>それでも、仕事は進んでいる。',
   'intro.nameTitle': '名前の由来',
   'intro.name':
-    '{product} という名前は <strong>herdr</strong> と <strong>handle</strong> に由来します。セッションを動かす herdr を、G2 から操作するためのハンドルです。ただ眺めるだけではなく、キーボードの前で行う操作を離れた場所から実行できます。',
+    '{product} = herdr + handle です。セッションを束ねる herdr を、G2 から握るハンドル、という名前です。導入にハードル(hurdle)があることも、由来のひとつです。',
   'demo.one': 'セッションがひとつ',
   'demo.split': '分割する',
   'demo.more': 'もうひとつ作る',
