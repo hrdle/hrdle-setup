@@ -1,9 +1,10 @@
 // Talking to the app that framed us.
 //
-// This guide runs in two places. Opened directly it is a web page: five screens
-// of preparation, ending by handing over to the phone. Framed by the Hrdle
-// glasses app it is the whole wizard, connect screen included — and everything
-// that touches the outside world is done by the host on our behalf:
+// This guide runs in two places. Opened directly it is a web page: two
+// explanation screens and five setup tasks, ending by handing over to the
+// phone. Framed by the Hrdle glasses app it is the whole wizard, connect screen
+// included — and everything that touches the outside world is done by the host
+// on our behalf:
 //
 //   - **Writing the server address.** It has to go into the *host's* own store,
 //     because that is where the G2 reads it from when it starts. Ours is a
