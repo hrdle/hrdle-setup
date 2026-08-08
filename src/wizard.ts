@@ -149,18 +149,52 @@ function glassesScreen(): string {
 }
 
 /**
- * One agent handing work to another, where you can see it.
+ * The exchange as the glasses actually draw it.
  *
- * Two panes and a thing crossing between them. The point is not that it is
- * possible — it is that it is *visible*, so the drawing has to show the message
- * arriving somewhere you could have been watching.
+ * One green panel, seven lines: the wearer's words prefixed '$ ', the agent's
+ * plain, tool calls in brackets, newest line at the bottom. That is the whole
+ * vocabulary the hardware has, so that is the whole vocabulary the demo gets.
+ * Every line is quoted from a real session.
  */
 function talkDemo(): string {
-  return `<div class="demo">
-    <div class="panes talk">
-      <div class="pane"><b>claude</b><em class="say-out">run the tests</em></div>
-      <div class="pane"><b>kimi</b><em class="say-in">ok, running</em></div>
-      <span class="msg"></span>
+  return `<div class="demo" tabindex="0">
+    <div class="g2log">
+      <div class="g2log-head">
+        <span class="hd3">${t('demo.head')}</span>
+        <span class="hdx hd0">${t('demo.session')}&nbsp;&nbsp;[recording]</span>
+        <span class="hdx hd1">${t('demo.session')}&nbsp;&nbsp;[transcribing]</span>
+        <span class="hdx hd2">${t('demo.session')}&nbsp;&nbsp;[confirm]</span>
+        <span>16:04</span>
+      </div>
+      <div class="g2log-body"><div class="g2log-flow">
+        <em class="ln0">$ ${t('demo.you')}</em>
+        <em class="ln1">${t('demo.split')}</em>
+        <em class="ln2">${t('demo.start')}</em>
+        <em class="ln3">${t('demo.prompt')}</em>
+        <em class="ln4">${t('demo.report')}</em>
+        <em class="ln5">$ ${t('demo.again')}</em>
+        <em class="ln6">${t('demo.verify')}</em>
+        <em class="ln7">${t('demo.done')}</em>
+      </div>
+      <div class="g2log-voice">
+        <em class="vb0">● Recording<br><br>Speak into the microphone</em>
+        <em class="vb1">Transcribing...</em>
+        <em class="vb2">${t('demo.you')}</em>
+      </div>
+      <div class="g2log-foot">
+        <span class="ft0">tap:stop and transcribe&nbsp;&nbsp;dbl:cancel</span>
+        <span class="ft1">dbl:cancel</span>
+        <span class="ft2">tap:send&nbsp;&nbsp;dbl:cancel</span>
+      </div></div>
+    </div>
+    <div class="g2link"><span class="wire"></span><em>herdr</em><span class="pkt down"></span><span class="pkt up"></span></div>
+    <div class="g2log g2log-codex">
+      <div class="g2log-head"><span>${t('demo.head2')}</span><span>16:04</span></div>
+      <div class="g2log-body">
+        <em class="c0">$ ${t('demo.cyou')}</em>
+        <em class="c1">${t('demo.cwrite')}</em>
+        <em class="c2">${t('demo.cdone')}</em>
+      </div>
     </div>
     <div class="demo-cap"><span class="t0">${t('demo.watch')}</span></div>
   </div>`
@@ -190,7 +224,7 @@ function node(
  * as an arrangement.
  */
 function agentsInside(): string {
-  const names = ['Claude Code', 'Codex', 'Grok', 'Kimi']
+  const names = ['Claude Code', 'Codex', 'Grok', 'Kimi', 'opencode']
   return `<div class="net-inner">
     <div class="net-inner-top">${t('how.herdr')}</div>
     <div class="net-agents">${names.map((n, i) => `<span class="a${i}">${n}</span>`).join('')}</div>
@@ -225,8 +259,25 @@ function screenHtml(id: StepId): { title: string; html: string } {
           <div class="wiz-hero">${brandIcon('hero', 118)}</div>
           <p class="wiz-lead">${t('intro.lead')}</p>
           <div class="wiz-card">
-            <h3>${t('intro.nameTitle')}</h3>
-            <p>${t('intro.name', { product })}</p>
+            <h3>${t('intro.whatTitle')}</h3>
+            <p>${t('intro.what', { product })}</p>
+            <ul class="wiz-points" style="margin-top:10px">
+              <li>${t('intro.getNew')}</li>
+              <li>${t('intro.get1')}</li>
+              <li>${t('intro.get2')}</li>
+              <li>${t('intro.get3')}</li>
+              <li>${t('intro.get4')}</li>
+            </ul>
+          </div>
+          <div class="wiz-card wiz-warn">
+            <h3>${t('intro.gapTitle')}</h3>
+            <p>${t('intro.gap', { product })}</p>
+          </div>
+
+          <div class="wiz-card">
+            <h3>${t('intro.seeTitle')}</h3>
+            <p>${t('intro.see')}</p>
+            ${talkDemo()}
           </div>
 
           <div class="wiz-card">
@@ -243,28 +294,11 @@ function screenHtml(id: StepId): { title: string; html: string } {
             <div class="wiz-sub">
               <h4>${t('intro.rivalHerdrTitle')}</h4>
               <p>${t('intro.rivalHerdr', { product })}</p>
+              <div class="wiz-col">
+                <h5>${t('intro.nameTitle')}</h5>
+                <p>${t('intro.name', { product })}</p>
+              </div>
             </div>
-          </div>
-          <div class="wiz-card wiz-warn">
-            <h3>${t('intro.gapTitle')}</h3>
-            <p>${t('intro.gap', { product })}</p>
-          </div>
-
-          <div class="wiz-card">
-            <h3>${t('intro.seeTitle')}</h3>
-            <p>${t('intro.see')}</p>
-            ${talkDemo()}
-          </div>
-
-          <div class="wiz-card">
-            <h3>${t('intro.whatTitle')}</h3>
-            <p>${t('intro.what', { product })}</p>
-            <ul class="wiz-points" style="margin-top:10px">
-              <li>${t('intro.get1')}</li>
-              <li>${t('intro.get2')}</li>
-              <li>${t('intro.get3')}</li>
-              <li>${t('intro.get4')}</li>
-            </ul>
           </div>
           <p class="wiz-note">${t('intro.time')}</p>
           <p class="wiz-note">${t('intro.openOnDesktop')}</p>
@@ -564,6 +598,11 @@ const CSS = `
   .wiz-sub { background:#0d0d0d; border:1px solid #232323; border-radius:9px;
              padding:11px 12px; margin-top:10px; }
   .wiz-sub h4 { font-size:12.5px; color:#ddd; font-weight:600; margin:0 0 6px; }
+  /* A column-style aside inside a nested item. */
+  .wiz-col { border-left:2px solid #5a2226; background:#141010; border-radius:0 8px 8px 0;
+             padding:9px 11px; margin-top:10px; }
+  .wiz-col h5 { font-size:11px; color:#ff8a8f; font-weight:600; margin:0 0 4px; }
+  .wiz-col p { font-size:12px; color:#999; line-height:1.6; margin:0; }
   .wiz-note { font-size:12px; color:#888; line-height:1.6; margin:8px 0 0; }
   .wiz-warn { border-color:#5a2226; background:#180c0d; }
   .wiz-warn h3 { color:#ff8a8f; }
@@ -636,6 +675,7 @@ const CSS = `
   .net-agents .a1 { animation-delay:1.1s }
   .net-agents .a2 { animation-delay:2.2s }
   .net-agents .a3 { animation-delay:3.3s }
+  .net-agents .a4 { animation-delay:4.4s }
   @keyframes net-agent {
     0%, 9%, 100%  { border-color:#333; color:#ddd; background:#1e1e1e; }
     3%            { border-color:#c9272e; color:#fff; background:#2a1416; }
@@ -686,34 +726,112 @@ const CSS = `
   .shot figcaption b { display:block; color:#ff6167; font-size:13px; margin-bottom:4px; }
   /* The demo runs a ten-second loop of its own — a claim being shown rather
      than a system being diagrammed, so it does not share the figure's clock. */
-  .demo { margin:2px 0 14px; }
+  .demo { margin:2px 0 14px; transition:transform .25s ease; transform-origin:center top; }
+  .demo:hover, .demo:focus { transform:scale(1.08); }
+  .demo:focus { outline:none; }
   .wiz-card .demo { margin:10px 0 0; }
-  .panes { display:flex; gap:4px; height:74px; }
-  .pane { position:relative; flex:1; min-width:0; border:1px solid #2f2f2f; border-radius:7px;
-          background:#0e0e0e; padding:7px 8px; font-family:ui-monospace, Menlo, monospace;
-          overflow:hidden; }
-  .pane b { display:block; font-size:9.5px; color:#7d7d7d; font-weight:400; }
   .demo-cap { position:relative; height:15px; margin-top:7px; }
   .demo-cap span { position:absolute; left:0; right:0; text-align:center; font-size:10.5px;
-                   color:#ff8a8f; opacity:0; animation:cap 10s linear infinite; }
-  @keyframes cap { 0%,1% { opacity:0 } 4%,18% { opacity:1 } 21%,100% { opacity:0 } }
-  /* The hand-off, seen. */
-  .talk { position:relative }
-  .say-out, .say-in { display:block; margin-top:5px; font-size:10px; font-style:normal;
-                      color:#ddd; opacity:0; animation:say 10s linear infinite }
-  .say-in { color:#4ade80; animation-delay:2.4s }
-  @keyframes say { 0%,8% { opacity:0 } 14%,74% { opacity:1 } 82%,100% { opacity:0 } }
-  .msg { position:absolute; top:34px; width:7px; height:7px; border-radius:50%; background:#ff5a60;
-         box-shadow:0 0 8px #ff5a60; opacity:0; animation:msg 10s linear infinite }
-  @keyframes msg {
-    0%, 16%   { left:26%; opacity:0 }
-    19%       { opacity:1 }
-    23%       { left:70%; opacity:1 }
-    25%, 100% { left:74%; opacity:0 }
-  }
+                   color:#ff8a8f; opacity:0; animation:cap 24s linear infinite; }
+  @keyframes cap { 0%,18% { opacity:0 } 19%,32% { opacity:1 } 35%,100% { opacity:0 } }
+  /* The exchange as the glasses actually draw it: one green on black, a
+     proportional sans, seven lines, newest at the bottom. Lines fill the frame
+     from the top; when the eighth arrives the column slides up one line and
+     the oldest line leaves the frame, the same redraw the panel does. */
+  .g2log { border:1px solid #1e3a24; background:#050805; border-radius:10px;
+           font-family:system-ui, "Noto Sans", "DejaVu Sans", sans-serif;
+           color:#4ade80; overflow:hidden; }
+  .g2log-head { display:flex; justify-content:space-between; padding:3px 9px;
+                font-size:9.5px; color:#2f7a45; border-bottom:1px solid #143020; }
+  .g2log-body { position:relative; height:114px; padding:3px 9px 6px; overflow:hidden; }
+  /* Seven lines fit, like the hardware. When the eighth arrives the whole
+     column slides up one line and the oldest line leaves the frame. */
+  .g2log-flow { animation:flow 24s linear infinite }
+  @keyframes flow { 0%,72.5% { transform:translateY(0) } 74%,100% { transform:translateY(-15px) } }
+  .g2log-flow em, .g2log-codex .g2log-body em { display:block; font-style:normal;
+      font-size:10.5px; line-height:15px;
+      white-space:nowrap; text-overflow:ellipsis;
+      opacity:0; overflow:hidden; animation-duration:24s;
+      animation-timing-function:linear; animation-iteration-count:infinite }
+  .g2log-body .ln0 { animation-name:ln0 }
+  .g2log-body .ln1 { animation-name:ln1 }
+  .g2log-body .ln2 { animation-name:ln2 }
+  .g2log-body .ln3 { animation-name:ln3 }
+  .g2log-body .ln4 { animation-name:ln4 }
+  .g2log-body .ln5 { animation-name:ln5 }
+  .g2log-body .ln6 { animation-name:ln6 }
+  .g2log-body .ln7 { animation-name:ln7 }
+  @keyframes ln0 { 0%,17% { opacity:0 } 18%,72.5% { opacity:1 } 74%,100% { opacity:0 } }
+  @keyframes ln1 { 0%,23% { opacity:0 } 24%,92% { opacity:1 } 96%,100% { opacity:0 } }
+  @keyframes ln2 { 0%,29% { opacity:0 } 30%,92% { opacity:1 } 96%,100% { opacity:0 } }
+  @keyframes ln3 { 0%,35% { opacity:0 } 36%,92% { opacity:1 } 96%,100% { opacity:0 } }
+  @keyframes ln4 { 0%,51% { opacity:0 } 52%,92% { opacity:1 } 96%,100% { opacity:0 } }
+  @keyframes ln5 { 0%,58% { opacity:0 } 59%,92% { opacity:1 } 96%,100% { opacity:0 } }
+  @keyframes ln6 { 0%,64% { opacity:0 } 65%,92% { opacity:1 } 96%,100% { opacity:0 } }
+  @keyframes ln7 { 0%,72.5% { opacity:0 } 73.5%,92% { opacity:1 } 96%,100% { opacity:0 } }
+  /* The hop between sessions runs over herdr: one wire, a packet down for the
+     ask, the same wire carrying the answer back up. */
+  .g2link { position:relative; height:26px; }
+  .g2link .wire { position:absolute; left:50%; top:0; bottom:0; width:2px; margin-left:-1px;
+      background:#1e3a24; opacity:0; animation:wshow 24s linear infinite; }
+  .g2link em { position:absolute; left:calc(50% + 8px); top:50%; transform:translateY(-50%);
+      font-style:normal; font-size:9px; color:#2f7a45; opacity:0; animation:wshow 24s linear infinite; }
+  @keyframes wshow { 0%,29% { opacity:0 } 31%,92% { opacity:1 } 96%,100% { opacity:0 } }
+  .g2link .pkt { position:absolute; left:50%; top:0; width:6px; height:6px; border-radius:50%;
+      margin-left:-3px; background:#4ade80; box-shadow:0 0 6px #4ade80; opacity:0;
+      animation-duration:24s; animation-timing-function:linear; animation-iteration-count:infinite; }
+  .g2link .down { animation-name:pdown }
+  .g2link .up { animation-name:pup }
+  @keyframes pdown { 0%,35% { top:0; opacity:0 } 36.5% { opacity:1 } 38.5%,100% { top:20px; opacity:0 } }
+  @keyframes pup { 0%,48% { top:20px; opacity:0 } 49% { opacity:1 } 51.5%,100% { top:0; opacity:0 } }
+  /* The glasses' own voice-input screen, drawn over kimi's panel at the start:
+     recording, transcribing, confirm — then the panel returns to the session. */
+  .g2log-head { position:relative; }
+  .g2log-head .hdx { position:absolute; left:9px; top:3px; background:#050805; opacity:0;
+      animation-duration:24s; animation-timing-function:linear; animation-iteration-count:infinite; }
+  .g2log-head .hd0 { animation-name:ph0 }
+  .g2log-head .hd1 { animation-name:ph1 }
+  .g2log-head .hd2 { animation-name:ph2 }
+  .g2log-head .hd3 { opacity:0; animation:hd3 24s linear infinite }
+  @keyframes ph0 { 0% { opacity:0 } 0.5%,7.5% { opacity:1 } 8%,100% { opacity:0 } }
+  @keyframes ph1 { 0%,8% { opacity:0 } 8.5%,10.5% { opacity:1 } 11%,100% { opacity:0 } }
+  @keyframes ph2 { 0%,11% { opacity:0 } 11.5%,15.5% { opacity:1 } 16%,100% { opacity:0 } }
+  @keyframes hd3 { 0%,16% { opacity:0 } 16.5%,92% { opacity:1 } 96%,100% { opacity:0 } }
+  .g2log-voice { position:absolute; left:0; right:0; top:0; bottom:0; background:#050805;
+      font-size:10.5px; line-height:15px; opacity:0; animation:vlay 24s linear infinite; }
+  @keyframes vlay { 0% { opacity:0 } 0.4%,15.5% { opacity:1 } 16%,100% { opacity:0 } }
+  .g2log-voice em { position:absolute; left:0; top:0; right:0; font-style:normal; opacity:0;
+      animation-duration:24s; animation-timing-function:linear; animation-iteration-count:infinite; }
+  .g2log-voice .vb0 { animation-name:ph0 }
+  .g2log-voice .vb1 { animation-name:ph1 }
+  .g2log-voice .vb2 { animation-name:ph2 }
+  .g2log-foot { position:absolute; left:0; right:0; bottom:2px; font-size:9px; color:#2f7a45; }
+  .g2log-foot span { position:absolute; left:0; bottom:0; background:#050805; opacity:0;
+      animation-duration:24s; animation-timing-function:linear; animation-iteration-count:infinite; }
+  .g2log-foot .ft0 { animation-name:ph0 }
+  .g2log-foot .ft1 { animation-name:ph1 }
+  .g2log-foot .ft2 { animation-name:ph2 }
+  /* The second panel is codex's own session. It fades in when kimi starts the
+     agent, and the words kimi sent arrive in it as a '$ ' line — on the
+     glasses, another agent's instructions read as your own input. */
+  .g2log-codex { opacity:0; animation:cshow 24s linear infinite }
+  @keyframes cshow { 0%,29% { opacity:0 } 30.5%,92% { opacity:1 } 96%,100% { opacity:0 } }
+  .g2log-codex .g2log-body { height:54px }
+  .g2log-body .c0 { animation-name:c0 }
+  .g2log-body .c1 { animation-name:c1 }
+  .g2log-body .c2 { animation-name:c2 }
+  @keyframes c0 { 0%,37% { opacity:0 } 38%,92% { opacity:1 } 96%,100% { opacity:0 } }
+  @keyframes c1 { 0%,44% { opacity:0 } 45%,92% { opacity:1 } 96%,100% { opacity:0 } }
+  @keyframes c2 { 0%,47% { opacity:0 } 48%,92% { opacity:1 } 96%,100% { opacity:0 } }
   @media (prefers-reduced-motion: reduce) {
-    .say-out, .say-in, .demo-cap span { opacity:1 }
-    .msg, .demo-cap span, .say-out, .say-in { animation:none }
+    .g2log-body { height:auto }
+    .g2log-flow { animation:none }
+    .g2log-codex { opacity:1 }
+    .g2log-voice, .g2log-foot, .g2log-head .hdx { display:none }
+    .g2log-head .hd3 { opacity:1; animation:none }
+    .g2link .wire, .g2link em { opacity:1; animation:none }
+    .g2link .pkt { opacity:0; animation:none }
+    .g2log-flow em, .g2log-codex .g2log-body em, .demo-cap span { max-height:none; opacity:1; animation:none }
   }
   /* The two little screens. Both keep to the twelve-second loop. */
   .mini { margin-top:12px; border-radius:8px; overflow:hidden; }

@@ -60,16 +60,29 @@ const EN: Table = {
   'step.done': 'Glasses',
   'step.outro': 'Finish in the app',
 
-  'intro.title': 'Why you would want this',
+  'intro.title': 'Your agents, even away from the desk',
   'intro.lead':
     'You are no longer in front of the PC.<br>And still, the work moves on.',
   'intro.nameTitle': 'Where the name comes from',
   'intro.name':
     '{product} = <strong>herdr</strong> + <strong>handle</strong>. A handle, held from the G2, for the thing that herds your sessions. The hurdle of getting started is in the name too.',
-  'demo.watch': 'and you can watch it happen',
+  'demo.head': 'tax-flow — kimi',
+  'demo.head2': 'tax-flow — codex',
+  'demo.session': 'tax-flow',
+  'demo.you': 'before we start fixing, please have codex review this code',
+  'demo.split': '[Bash] herdr pane split --direction down',
+  'demo.start': '[Bash] herdr agent start reviewer --kind codex',
+  'demo.prompt': '[Bash] herdr agent prompt reviewer "please review this repository — review only, do not change the code',
+  'demo.report': 'codex\'s review is done — all 5 earlier findings judged "valid", plus new findings',
+  'demo.again': 'all of it, please',
+  'demo.verify': '[Agent] verify the tax numbers against primary sources',
+  'demo.done': 'all fixes verified — 13 regression tests, all green',
+  'demo.cyou': 'please review this repository — review only, do not change the code',
+  'demo.cwrite': '[Write] /tmp/codex-review.md',
+  'demo.cdone': 'done: /tmp/codex-review.md',
+  'demo.watch': 'This exchange really happened — the words are verbatim.',
   'intro.diffTitle': 'What this is next to',
-  'intro.diff':
-    'Holding the sessions is not {product}\'s doing — herdr does that, and a session here <em>is</em> a herdr pane. So the honest comparisons are not Claude Code and the rest, which are the things being run. They are these three.',
+  'intro.diff': 'Three things come close.',
   'intro.rivalEvenTitle': "Even's own Terminal Mode",
   'intro.rivalEven':
     'The closest alternative comes from the people who made the glasses: <code>even-terminal</code> connects one agent process to the G2 and turns ring gestures into keystrokes. If one agent in one working directory is all you need, it is the simpler fit. {product} differs by keeping multiple sessions available and letting you start and manage them remotely.',
@@ -81,13 +94,13 @@ const EN: Table = {
     'Everything {product} knows about sessions, herdr already does — and you can drive it from a terminal without any of this. The catch is the terminal: the grip is real, but the hand holding it has to be at a keyboard.',
   'intro.gapTitle': 'Start work without opening a laptop',
   'intro.gap':
-    'Not just watching — starting. Create a session from your phone, ask by voice, answer its questions from the glasses. The PC stays closed.',
+    'Not just watching — starting. Create a session, ask by voice, answer its questions from the glasses. The PC stays closed.',
   'intro.seeTitle': 'Agents talking to each other, in plain sight',
   'intro.see':
-    'When Claude Code hands work to Kimi Code, that is not something happening inside a black box. It is a pane, on a screen, that you can watch it happen in. herdr makes the conversation between agents as visible as the conversation with one.',
+    'You ask an agent from the glasses.<br>That agent hands it to another.<br>All of it, visible in the panes.',
   'intro.whatTitle': 'What it is, concretely',
   'intro.what':
-    '{product} runs your coding agents — Claude Code, Codex, Grok, Kimi — on a machine of yours, and puts them on your phone and on the G2.',
+    '{product} runs your coding agents — Claude Code, Codex, Grok, Kimi, opencode — on a machine of yours, and puts the controls on your phone and on the G2.',
   'intro.net.machine': 'A machine · awake 24/7',
   'intro.net.machineDesc': 'the {product} server, and herdr underneath it',
   'how.herdr': 'herdr — every session lives in one',
@@ -118,6 +131,7 @@ const EN: Table = {
   'how.title': 'How the pieces fit',
   'how.lead':
     'The agent feels like it is right here — one line in front of your eye, answered with a thumb. It is not. It is on a machine somewhere else entirely, and these two hops are what close the distance.',
+  'intro.getNew': 'Start new sessions',
   'intro.get1': 'Run several agent sessions at once and switch between them',
   'intro.get2': 'Watch what each one is doing, live',
   'intro.get3': 'Approve or reject a prompt from the glasses, with the ring',
@@ -158,7 +172,7 @@ const EN: Table = {
   'agent.signIn':
     'An agent that has never been signed in shows a login screen when it starts — and a login screen is not something you want to meet through the glasses.',
   'agent.others':
-    'Codex, Grok Build and Kimi Code work too, and you can add them later. One is enough to finish this setup.',
+    'Codex, Grok Build, Kimi Code and opencode work too, and you can add them later. One is enough to finish this setup.',
 
   'tailscale.title': 'Put that machine on Tailscale',
   'tailscale.lead':
@@ -313,16 +327,29 @@ const JA: Table = {
   'step.done': 'グラス',
   'step.outro': 'アプリで仕上げる',
 
-  'intro.title': 'なぜこれを使うのか',
+  'intro.title': '机を離れても、エージェントに届く',
   'intro.lead':
     'パソコンの前に、あなたはもういない。<br>それでも、仕事は進んでいる。',
   'intro.nameTitle': '名前の由来',
   'intro.name':
     '{product} = herdr + handle です。セッションを束ねる herdr を、G2 から握るハンドル、という名前です。導入にハードル(hurdle)があることも、由来のひとつです。',
-  'demo.watch': 'そしてそれが見える',
+  'demo.head': '税金の行方 — kimi',
+  'demo.head2': '税金の行方 — codex',
+  'demo.session': '税金の行方',
+  'demo.you': '修正範囲に入る前にこのコードに関してレビュー依頼をコーデックスにお願いしてください',
+  'demo.split': '[Bash] herdr pane split --direction down',
+  'demo.start': '[Bash] herdr agent start reviewer --kind codex',
+  'demo.prompt': '[Bash] herdr agent prompt reviewer "このリポジトリのコードレビューをお願いします。コードは変更せず、レビューのみ行ってください',
+  'demo.report': 'Codex のレビューが完了。先行指摘5件はすべて「妥当」と判定され、新しい指摘が加わりました',
+  'demo.again': '全部お願いします',
+  'demo.verify': '[Agent] 税制数値を一次情報で確認',
+  'demo.done': '全スコープの修正と検証が完了しました。テスト13件、すべて成功',
+  'demo.cyou': 'このリポジトリのコードレビューをお願いします。コードは変更せず、レビューのみ行ってください',
+  'demo.cwrite': '[Write] /tmp/codex-review.md',
+  'demo.cdone': '完了しました: /tmp/codex-review.md',
+  'demo.watch': '実際にあったやり取りです。言葉も、そのまま。',
   'intro.diffTitle': '何と比べるか',
-  'intro.diff':
-    'セッションを保持・管理しているのは {product} ではなく herdr で、ここでのセッションは herdr のペイン<em>そのもの</em>です。Claude Code などは管理される側なので、比較対象は次の3つです。',
+  'intro.diff': '似ているものは3つあります。',
   'intro.rivalEvenTitle': 'Even 純正の Terminal Mode',
   'intro.rivalEven':
     '最も近い選択肢は、グラスを作った Even の <code>even-terminal</code> です。1つのエージェントプロセスを G2 につなぎ、リングの操作をキー入力として伝えます。1つの作業ディレクトリで1つのエージェントを使えればよい場合は、こちらのほうがシンプルです。{product} は複数のセッションを維持し、離れた場所から開始・管理できる点が異なります。',
@@ -334,13 +361,13 @@ const JA: Table = {
     '{product} が扱うセッションは、もともと herdr が管理しています。{product} を入れなくても、ターミナルから操作できます。違いは操作する場所で、herdr 単体では基本的にキーボードの前にいる必要があります。',
   'intro.gapTitle': 'PC を開かずに仕事を始める',
   'intro.gap':
-    '見るだけでなく、始められます。スマホでセッションを作り、声で頼み、質問にはグラスで答える。パソコンは、開かないままでいい。',
+    '見るだけでなく、始められます。セッションを作り、声で頼み、質問にはグラスで答える。パソコンは、開かないままでいい。',
   'intro.seeTitle': 'エージェント同士のやり取りも、目に見える',
   'intro.see':
-    'Claude Code が Kimi Code に仕事を渡すとき、それはブラックボックスの中の出来事ではありません。画面上のペインで、実際に起きているのが見えます。herdr は、エージェント同士の会話を、エージェントとの会話と同じだけ見えるものにします。',
+    'グラスから、エージェントに頼む。<br>そのエージェントが、別のエージェントに渡す。<br>その全部が、ペインの上に見えている。',
   'intro.whatTitle': '具体的には',
   'intro.what':
-    '{product} は Claude Code、Codex、Grok、Kimi といったコーディングエージェントをあなたのマシンで動かし、それをスマホと G2 に映します。',
+    '{product} は Claude Code、Codex、Grok、Kimi、opencode といったコーディングエージェントをあなたのマシンで動かし、スマホと G2 から操作できるようにします。',
   'intro.net.machine': 'マシン · 24時間起動',
   'intro.net.machineDesc': '{product} サーバーと、その下の herdr',
   'how.herdr': 'herdr — すべてのセッションはこの中',
@@ -371,6 +398,7 @@ const JA: Table = {
   'how.title': '全体のつながり',
   'how.lead':
     'エージェントはすぐ目の前にいるように感じます。視界に1行出て、指先で答えられる。けれど実際は、まったく別の場所にあるマシンの中にいます。その距離を埋めているのが、この2つのつなぎ目です。',
+  'intro.getNew': '新しいセッションを作る',
   'intro.get1': '複数のエージェントセッションを同時に動かし、切り替える',
   'intro.get2': 'それぞれが何をしているかをリアルタイムで見る',
   'intro.get3': 'グラスから、リングだけで承認・却下する',
@@ -411,7 +439,7 @@ const JA: Table = {
   'agent.signIn':
     '一度もサインインしていないエージェントは、起動するとログイン画面を出します。ログイン画面はグラス越しに出会いたいものではありません。',
   'agent.others':
-    'Codex、Grok Build、Kimi Code にも対応しています。後から追加できるので、このセットアップを終えるには1つあれば足ります。',
+    'Codex、Grok Build、Kimi Code、opencode にも対応しています。後から追加できるので、このセットアップを終えるには1つあれば足ります。',
 
   'tailscale.title': 'マシンを Tailscale につなぐ',
   'tailscale.lead':
