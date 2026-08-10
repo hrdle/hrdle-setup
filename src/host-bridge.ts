@@ -96,6 +96,18 @@ export interface GlassesSettingsView {
   sttBias: boolean
   /** `env` is `HRDLE_STT_PROMPT=off`, which this screen cannot switch back on. */
   sttBiasSource: 'setting' | 'env' | 'default'
+  /**
+   * Which model transcribes, and every model the server will accept (hrdle#253).
+   *
+   * Optional because this guide is deployed on its own schedule and meets
+   * whichever server someone already has running. Before #253 the model was
+   * fixed and none of this was reported; the panel leaves the row out rather
+   * than offering a choice that server would reject.
+   */
+  sttModel?: string
+  sttModelSource?: 'setting' | 'default'
+  /** Named by the server so this app need not hardcode them. */
+  sttModels?: string[]
 }
 
 /**

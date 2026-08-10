@@ -65,6 +65,15 @@ export function settingsPanelHtml(): string {
       </select>
       <div id="stt-lang-status" style="${S.status}"></div>
 
+      <!-- Hidden until the settings say otherwise: a server from before
+           hrdle#253 has no model setting, and the options come from its own
+           list, so there is nothing to draw. Filled in by wireSettingsPanel(). -->
+      <div id="stt-model-row" hidden>
+        <label style="${S.label}" for="stt-model">${t('settings.model')}</label>
+        <select id="stt-model" style="${S.input}"></select>
+        <div id="stt-model-status" style="${S.status}"></div>
+      </div>
+
       <span style="${S.label}">${t('settings.bias')}</span>
       <label style="${S.toggle}">
         <input type="checkbox" id="stt-bias" />
@@ -118,6 +127,7 @@ export interface SettingsApi {
     groqApiKey?: string | null
     sttLang?: string | null
     sttBias?: 'on' | 'off' | null
+    sttModel?: string | null
   }): Promise<GlassesSettingsView>
   /** What a transcription would send right now (hrdle#255). */
   preview(): Promise<SttRequestPreview>
@@ -131,6 +141,9 @@ export async function wireSettingsPanel(api: SettingsApi): Promise<void> {
 
   const keyStatus = el('stt-key-status')
   const langStatus = el('stt-lang-status')
+  const model = el<HTMLSelectElement>('stt-model')
+  const modelRow = el('stt-model-row')
+  const modelStatus = el('stt-model-status')
   const biasStatus = el('stt-bias-status')
   const biasPreview = el('stt-bias-preview')
 
@@ -150,6 +163,23 @@ export async function wireSettingsPanel(api: SettingsApi): Promise<void> {
         v.sttLangSource === 'setting'
           ? t('settings.langSaved')
           : t('settings.langDefault', { lang: v.sttLang })
+    }
+
+    // The server names the models it accepts; offering any other would be a
+    // 400 on every utterance, reported to the wearer as "STT provider error".
+    // A server that names none has no such setting at all, so the row stays
+    // hidden instead of showing a select with nothing in it.
+    if (modelRow) modelRow.hidden = !v.sttModel
+    if (model && v.sttModel) {
+      const models = v.sttModels?.length ? v.sttModels : [v.sttModel]
+      model.innerHTML = models.map((m) => `<option value="${m}">${m}</option>`).join('')
+      model.value = v.sttModel
+      if (modelStatus) {
+        modelStatus.textContent =
+          v.sttModelSource === 'setting'
+            ? t('settings.modelSaved')
+            : t('settings.modelDefault', { model: v.sttModel })
+      }
     }
 
     bias.checked = v.sttBias
@@ -216,6 +246,14 @@ export async function wireSettingsPanel(api: SettingsApi): Promise<void> {
       render(await api.put({ sttLang: lang.value }))
     } catch (err) {
       fail(langStatus, err)
+    }
+  })
+
+  model?.addEventListener('change', async () => {
+    try {
+      render(await api.put({ sttModel: model.value }))
+    } catch (err) {
+      fail(modelStatus, err)
     }
   })
 
