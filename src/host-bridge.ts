@@ -37,6 +37,7 @@ export type ToHost =
   | { type: 'hrdle:connect'; url: string }
   | { type: 'hrdle:settings-get' }
   | { type: 'hrdle:settings-put'; patch: SettingsPatch }
+  | { type: 'hrdle:stt-preview' }
 
 /** What the host answers. */
 export type FromHost =
@@ -45,6 +46,7 @@ export type FromHost =
   | { type: 'hrdle:resolved'; url?: string; error?: string }
   | { type: 'hrdle:connect-result'; ok: boolean; server?: ServerSummary; error?: string }
   | { type: 'hrdle:settings'; view?: GlassesSettingsView; error?: string }
+  | { type: 'hrdle:stt-preview-result'; preview?: SttRequestPreview; error?: string }
 
 export interface ServerSummary {
   version: string
@@ -73,19 +75,40 @@ export interface AppSummary {
 export interface SettingsPatch {
   groqApiKey?: string | null
   sttLang?: string | null
-  sttPrompt?: string | null
+  sttBias?: 'on' | 'off' | null
+  sttModel?: string | null
 }
 
-/** What the settings screen may see. The Groq key is write-only, so it is absent. */
+/**
+ * What the settings screen may see. The Groq key is write-only, so it is absent.
+ *
+ * So is the prompt that would be sent: this screen has no session, so it never
+ * had one to show, and the field that looked as though it did (`effectivePrompt`)
+ * was read as the sent value once too often (hrdle#255). `SttRequestPreview` is
+ * the answer to that question.
+ */
 export interface GlassesSettingsView {
   hasApiKey: boolean
   apiKeySource: 'setting' | 'env' | 'none'
   sttLang: string
   sttLangSource: 'setting' | 'default'
-  sttPrompt: string
-  /** What is saved here joins the composed line rather than replacing it (hrdle#210). */
-  sttPromptSource: 'composed' | 'env' | 'off'
-  effectivePrompt: string
+  /** Whether a vocabulary prompt is sent at all. */
+  sttBias: boolean
+  /** `env` is `HRDLE_STT_PROMPT=off`, which this screen cannot switch back on. */
+  sttBiasSource: 'setting' | 'env' | 'default'
+}
+
+/**
+ * What a transcription would actually carry (hrdle#255).
+ *
+ * The same object the transcription resolves for itself, so this is the sent
+ * value rather than a second guess at it. Only the fields this screen reads are
+ * declared; the server answers with more.
+ */
+export interface SttRequestPreview {
+  /** `null` sends no vocabulary prompt at all. */
+  prompt: string | null
+  promptSource: 'composed' | 'env' | 'off'
 }
 
 /**
@@ -225,4 +248,18 @@ export function getSettingsViaHost(): Promise<GlassesSettingsView> {
 
 export function putSettingsViaHost(patch: SettingsPatch): Promise<GlassesSettingsView> {
   return settings({ type: 'hrdle:settings-put', patch })
+}
+
+/**
+ * What a transcription would send right now, asked through the host.
+ *
+ * Through the host like everything else: this page is a public origin and the
+ * server sits on a tailnet address inside CGNAT space, which Private Network
+ * Access refuses whatever CORS says.
+ */
+export async function getSttPreviewViaHost(): Promise<SttRequestPreview> {
+  const answer = await ask({ type: 'hrdle:stt-preview' }, 'hrdle:stt-preview-result', 15_000)
+  if (!answer) throw new Error('the app did not answer')
+  if (answer.error || !answer.preview) throw new Error(answer.error || 'no preview returned')
+  return answer.preview
 }

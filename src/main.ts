@@ -15,6 +15,7 @@ import {
   connectToHost,
   connectViaHost,
   getSettingsViaHost,
+  getSttPreviewViaHost,
   hasHost,
   hostApp,
   hostUrl,
@@ -285,7 +286,11 @@ function wireConnect(): void {
 function wireDone(): void {
   paintServer()
   void handOverPendingKey()
-  void wireSettingsPanel({ get: getSettingsViaHost, put: putSettingsViaHost })
+  void wireSettingsPanel({
+    get: getSettingsViaHost,
+    put: putSettingsViaHost,
+    preview: getSttPreviewViaHost,
+  })
   app?.querySelector('#wiz-disconnect')?.addEventListener('click', () => {
     clearHostUrl()
     url = ''
