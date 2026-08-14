@@ -274,10 +274,12 @@ export async function wireSettingsPanel(api: SettingsApi): Promise<void> {
     if (screenSection) screenSection.hidden = v.screenOffSeconds === undefined
     if (screenOffSeconds && v.screenOffSeconds !== undefined) {
       screenOffSeconds.value = String(v.screenOffSeconds)
+      // The stored-value text, not the save confirmation: render() is also the
+      // initial paint, and a panel that opens saying "Saved" has saved nothing.
       if (screenOffStatus) {
         screenOffStatus.textContent =
           v.screenOffSecondsSource === 'setting'
-            ? t('settings.screenOffSaved')
+            ? t('settings.screenOffStored')
             : t('settings.screenOffDefault')
       }
     }
@@ -400,6 +402,7 @@ export async function wireSettingsPanel(api: SettingsApi): Promise<void> {
     }
     try {
       render(await api.put({ screenOffSeconds: seconds }))
+      if (screenOffStatus) screenOffStatus.textContent = t('settings.screenOffSaved')
     } catch (err) {
       fail(screenOffStatus, err)
     }

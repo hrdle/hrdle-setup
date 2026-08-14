@@ -279,7 +279,7 @@ const EN: Table = {
   'settings.subtitle':
     'Language and vocabulary travel with the speech, whichever server transcribes it.',
   'settings.groqSubtitle':
-    'The default transcriber. The key is stored on the server, and sent to Groq only with transcription requests.',
+    'The default transcriber. The key is stored on the server, and attached only to transcription requests - to Groq, or to the custom server when one is chosen.',
   'settings.key': 'Groq API key',
   'settings.keySave': 'Save key',
   'settings.keyClear': 'Clear',
@@ -312,7 +312,8 @@ const EN: Table = {
   'settings.screenOffHint':
     '0 = never. After this long with no ring input the panel goes dark; a double-tap wakes it.',
   'settings.screenOffSave': 'Save',
-  'settings.screenOffSaved': 'Saved. Running glasses pick it up within a couple of minutes.',
+  'settings.screenOffSaved': 'Saved. Running glasses pick it up within seconds.',
+  'settings.screenOffStored': 'Set on this server.',
   'settings.screenOffDefault': 'Off by default - the screen stays on. Type seconds and save to enable.',
   'settings.screenOffInvalid': 'Whole seconds between 0 and 3600.',
   'settings.groqTitle': 'Groq',
@@ -589,7 +590,7 @@ const JA: Table = {
   'settings.subtitle':
     '言語と語彙の設定は、どの送り先で文字起こしする場合も共通です。',
   'settings.groqSubtitle':
-    '既定の文字起こし先です。キーはサーバーに保存され、音声認識のリクエスト時だけ Groq へ送信されます。',
+    '既定の文字起こし先です。キーはサーバーに保存され、音声認識のリクエスト時だけ送信されます。送り先は Groq、またはカスタムサーバーを選んでいる場合はそちらです。',
   'settings.key': 'Groq API キー',
   'settings.keySave': 'キーを保存',
   'settings.keyClear': '消去',
@@ -622,7 +623,8 @@ const JA: Table = {
   'settings.screenOffHint':
     '0 で消灯しない。リング無操作がこの秒数続くと画面が消え、ダブルタップで戻ります。',
   'settings.screenOffSave': '保存',
-  'settings.screenOffSaved': '保存しました。稼働中のグラスにも 2 分以内に反映されます。',
+  'settings.screenOffSaved': '保存しました。稼働中のグラスにも数秒で反映されます。',
+  'settings.screenOffStored': 'このサーバーに設定済みです。',
   'settings.screenOffDefault': '既定では消灯しません。秒数を入れて保存すると有効になります。',
   'settings.screenOffInvalid': '0〜3600 の整数で入力してください。',
   'settings.groqTitle': 'Groq',
