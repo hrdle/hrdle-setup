@@ -279,7 +279,7 @@ const EN: Table = {
   'settings.subtitle':
     'Language and vocabulary travel with the speech, whichever server transcribes it.',
   'settings.groqSubtitle':
-    'The default transcriber. The key is stored on the server, and sent to Groq only with transcription requests.',
+    'The default transcriber. Its key is stored on the server and sent to Groq alone - a custom endpoint gets its own key, never this one.',
   'settings.key': 'Groq API key',
   'settings.keySave': 'Save key',
   'settings.keyClear': 'Clear',
@@ -328,6 +328,9 @@ const EN: Table = {
     'An OpenAI-shaped endpoint (a local Whisper, for example), used when the provider above says so. Audio goes wherever this points.',
   'settings.endpointUrl': 'Endpoint URL',
   'settings.endpointModel': 'Model name the endpoint expects',
+  'settings.endpointKey': 'Endpoint key (leave empty if it needs none)',
+  'settings.endpointKeyPlaceholder': 'none',
+  'settings.endpointKeySet': 'stored - type to replace',
   'settings.endpointFallback': 'Fall back to Groq when it is unreachable',
   'settings.endpointSave': 'Save endpoint',
   'settings.endpointClear': 'Clear',
@@ -591,7 +594,7 @@ const JA: Table = {
   'settings.subtitle':
     '言語と語彙の設定は、どの送り先で文字起こしする場合も共通です。',
   'settings.groqSubtitle':
-    '既定の文字起こし先です。キーはサーバーに保存され、音声認識のリクエスト時だけ Groq へ送信されます。',
+    '既定の文字起こし先です。キーはサーバーに保存され、送信先は Groq のみ。カスタムエンドポイントには専用のキーが使われ、こちらは渡りません。',
   'settings.key': 'Groq API キー',
   'settings.keySave': 'キーを保存',
   'settings.keyClear': '消去',
@@ -640,6 +643,9 @@ const JA: Table = {
     'OpenAI 互換のエンドポイント (ローカルの Whisper 等)。上の「文字起こしの送り先」でこちらを選んだ時に使われます。音声はここで指定した先に送られます。',
   'settings.endpointUrl': 'エンドポイント URL',
   'settings.endpointModel': '送り先が要求するモデル名',
+  'settings.endpointKey': 'エンドポイントのキー (不要なら空欄)',
+  'settings.endpointKeyPlaceholder': 'なし',
+  'settings.endpointKeySet': '保存済み - 入れ替えるなら入力',
   'settings.endpointFallback': '届かない時は Groq に切り替える',
   'settings.endpointSave': '送り先を保存',
   'settings.endpointClear': '消去',
