@@ -21,6 +21,7 @@ const LANGS: Array<{ value: string; labelKey: string }> = [
   { value: 'en', labelKey: 'settings.langEn' },
 ]
 
+
 // The accent is a variable so the panel can sit in either palette. Here it is
 // always the red one; the copy that lives in the glasses repo also serves the
 // browser simulator, which is green because that is what the G2 draws in.
@@ -38,41 +39,66 @@ const S = {
   status: 'font-size:12px;color:#888;margin-top:8px;min-height:16px;',
   toggle:
     'display:flex;align-items:center;gap:8px;font-size:14px;color:#eee;margin-top:4px;cursor:pointer;',
+  // A provider's own box, nested inside the voice-input section: the border
+  // is what says "these fields belong to the choice above".
+  subsection:
+    'background:#0c0c0c;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-top:14px;',
+  h3: 'font-size:13px;color:#ddd;margin:0 0 8px;font-weight:600;',
   // The line as it goes out: read-only, wrapping, and monospaced so a term cut
   // by the budget is visible as a term rather than as prose.
   preview:
     'margin-top:8px;padding:10px;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:#bbb;font-size:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;line-height:1.5;white-space:pre-wrap;word-break:break-word;',
 }
 
-/** Markup for the panel. Mount it wherever, then call `wireSettingsPanel()`. */
+/**
+ * Four sections, split by who a value belongs to. The screen setting is not
+ * voice input at all; language and vocabulary go with the speech wherever it
+ * is sent; the key and the model list are Groq's own; the custom endpoint is
+ * its own machine. One box holding all of it read as "these are all Groq
+ * settings", which is exactly what it wasn't.
+ *
+ * The screen section and the custom section follow the model row's rule: a
+ * server from before the feature reports nothing, and a setting it would drop
+ * must not be offered - wireSettingsPanel() unhides them.
+ */
 export function settingsPanelHtml(): string {
   return `
+    <div id="glasses-screen-settings" style="${S.section}" hidden>
+      <h2 style="${S.h2}">${t('settings.glassesTitle')}</h2>
+      <label style="${S.label}" for="screen-off-seconds">${t('settings.screenOff')}</label>
+      <p style="${S.sub}">${t('settings.screenOffHint')}</p>
+      <input id="screen-off-seconds" type="number" inputmode="numeric" min="0" max="3600" step="1" style="${S.input}" />
+      <div style="${S.row}">
+        <button type="button" id="screen-off-save" style="${S.btn}">${t('settings.screenOffSave')}</button>
+      </div>
+      <div id="screen-off-status" style="${S.status}"></div>
+    </div>
+
     <div id="stt-settings" style="${S.section}">
       <h2 style="${S.h2}">${t('settings.title')}</h2>
       <p style="${S.sub}">${t('settings.subtitle')}</p>
 
-      <label style="${S.label}" for="stt-key">${t('settings.key')}</label>
-      <input id="stt-key" type="password" autocomplete="off" placeholder="gsk_..." style="${S.input}" />
-      <div style="${S.row}">
-        <button type="button" id="stt-key-save" style="${S.btn}">${t('settings.keySave')}</button>
-        <button type="button" id="stt-key-clear" style="${S.btnGhost}">${t('settings.keyClear')}</button>
+      <!-- Hidden against a server from before the provider choice existed:
+           choosing against a server that ignores the answer is worse than the
+           old single-box layout. wireSettingsPanel() unhides it. -->
+      <div id="stt-provider-row" hidden>
+        <label style="${S.label}" for="stt-provider">${t('settings.provider')}</label>
+        <select id="stt-provider" style="${S.input}">
+          <option value="groq">${t('settings.providerGroq')}</option>
+          <option value="custom">${t('settings.providerCustom')}</option>
+        </select>
+        <label style="${S.toggle}">
+          <input type="checkbox" id="stt-fallback" />
+          <span>${t('settings.fallbackToggle')}</span>
+        </label>
+        <div id="stt-destination" style="${S.status}"></div>
       </div>
-      <div id="stt-key-status" style="${S.status}"></div>
 
       <label style="${S.label}" for="stt-lang">${t('settings.lang')}</label>
       <select id="stt-lang" style="${S.input}">
         ${LANGS.map((l) => `<option value="${l.value}">${t(l.labelKey)}</option>`).join('')}
       </select>
       <div id="stt-lang-status" style="${S.status}"></div>
-
-      <!-- Hidden until the settings say otherwise: a server from before
-           hrdle#253 has no model setting, and the options come from its own
-           list, so there is nothing to draw. Filled in by wireSettingsPanel(). -->
-      <div id="stt-model-row" hidden>
-        <label style="${S.label}" for="stt-model">${t('settings.model')}</label>
-        <select id="stt-model" style="${S.input}"></select>
-        <div id="stt-model-status" style="${S.status}"></div>
-      </div>
 
       <span style="${S.label}">${t('settings.bias')}</span>
       <label style="${S.toggle}">
@@ -84,6 +110,46 @@ export function settingsPanelHtml(): string {
            named, that is the glossary every session shares. -->
       <div id="stt-bias-preview" style="${S.preview}"></div>
       <div id="stt-bias-status" style="${S.status}"></div>
+
+      <div id="stt-groq-settings" style="${S.subsection}">
+        <h3 style="${S.h3}">${t('settings.groqTitle')}</h3>
+        <p style="${S.sub}">${t('settings.groqSubtitle')}</p>
+
+        <label style="${S.label}" for="stt-key">${t('settings.key')}</label>
+        <input id="stt-key" type="password" autocomplete="off" placeholder="gsk_..." style="${S.input}" />
+        <div style="${S.row}">
+          <button type="button" id="stt-key-save" style="${S.btn}">${t('settings.keySave')}</button>
+          <button type="button" id="stt-key-clear" style="${S.btnGhost}">${t('settings.keyClear')}</button>
+        </div>
+        <div id="stt-key-status" style="${S.status}"></div>
+
+        <!-- Hidden until the settings say otherwise: a server from before
+             hrdle#253 has no model setting, and the options come from its own
+             list, so there is nothing to draw. Filled in by wireSettingsPanel(). -->
+        <div id="stt-model-row" hidden>
+          <label style="${S.label}" for="stt-model">${t('settings.model')}</label>
+          <select id="stt-model" style="${S.input}"></select>
+          <div id="stt-model-status" style="${S.status}"></div>
+        </div>
+      </div>
+
+      <div id="stt-custom-settings" style="${S.subsection}" hidden>
+        <h3 style="${S.h3}">${t('settings.endpoint')}</h3>
+        <p style="${S.sub}">${t('settings.endpointHint')}</p>
+        <label style="${S.label}" for="stt-endpoint-url">${t('settings.endpointUrl')}</label>
+        <input id="stt-endpoint-url" type="url" autocomplete="off" placeholder="https://..." style="${S.input}" />
+        <label style="${S.label}" for="stt-endpoint-model">${t('settings.endpointModel')}</label>
+        <input id="stt-endpoint-model" type="text" autocomplete="off" placeholder="whisper-1" style="${S.input}" />
+        <div style="${S.row}">
+          <button type="button" id="stt-endpoint-save" style="${S.btn}">${t('settings.endpointSave')}</button>
+          <button type="button" id="stt-endpoint-clear" style="${S.btnGhost}">${t('settings.endpointClear')}</button>
+        </div>
+        <div id="stt-endpoint-status" style="${S.status}"></div>
+        <details style="margin-top:8px;">
+          <summary style="${S.sub.replace('margin:0 0 12px;', 'cursor:pointer;')}">${t('settings.endpointSpecTitle')}</summary>
+          <div style="${S.sub.replace('margin:0 0 12px;', 'margin:8px 0 0;')}">${t('settings.endpointSpec')}</div>
+        </details>
+      </div>
     </div>
   `
 }
@@ -128,6 +194,11 @@ export interface SettingsApi {
     sttLang?: string | null
     sttBias?: 'on' | 'off' | null
     sttModel?: string | null
+    screenOffSeconds?: number | null
+    sttEndpointUrl?: string | null
+    sttEndpointModel?: string | null
+    sttProvider?: 'groq' | 'custom' | null
+    sttFallback?: 'on' | 'off' | null
   }): Promise<GlassesSettingsView>
   /** What a transcription would send right now (hrdle#255). */
   preview(): Promise<SttRequestPreview>
@@ -146,6 +217,17 @@ export async function wireSettingsPanel(api: SettingsApi): Promise<void> {
   const modelStatus = el('stt-model-status')
   const biasStatus = el('stt-bias-status')
   const biasPreview = el('stt-bias-preview')
+  const screenOffSeconds = el<HTMLInputElement>('screen-off-seconds')
+  const screenSection = el('glasses-screen-settings')
+  const screenOffStatus = el('screen-off-status')
+  const destination = el('stt-destination')
+  const endpointSection = el('stt-custom-settings')
+  const providerRow = el('stt-provider-row')
+  const provider = el<HTMLSelectElement>('stt-provider')
+  const fallback = el<HTMLInputElement>('stt-fallback')
+  const endpointUrl = el<HTMLInputElement>('stt-endpoint-url')
+  const endpointModel = el<HTMLInputElement>('stt-endpoint-model')
+  const endpointStatus = el('stt-endpoint-status')
 
   // The last view, for the one thing the preview cannot say on its own: why it
   // is off. `off` looks the same from down there whoever switched it.
@@ -186,6 +268,45 @@ export async function wireSettingsPanel(api: SettingsApi): Promise<void> {
     // `HRDLE_STT_PROMPT=off` is a decision made at the process level and this
     // screen cannot undo it, so the switch says so rather than pretending.
     bias.disabled = v.sttBiasSource === 'env'
+
+    // Both new sections follow the model row's rule: a server that reports
+    // nothing gets no section, not a section that pretends.
+    if (screenSection) screenSection.hidden = v.screenOffSeconds === undefined
+    if (screenOffSeconds && v.screenOffSeconds !== undefined) {
+      screenOffSeconds.value = String(v.screenOffSeconds)
+      if (screenOffStatus) {
+        screenOffStatus.textContent =
+          v.screenOffSecondsSource === 'setting'
+            ? t('settings.screenOffSaved')
+            : t('settings.screenOffDefault')
+      }
+    }
+
+    if (providerRow) providerRow.hidden = !v.sttEndpoint
+    if (v.sttEndpoint && provider && fallback) {
+      provider.value = v.sttEndpoint.provider
+      fallback.checked = v.sttEndpoint.fallback
+    }
+    if (destination) {
+      destination.textContent = v.sttEndpoint
+        ? t('settings.destinationLine', { destination: v.sttEndpoint.destination })
+        : ''
+    }
+
+    if (endpointSection) endpointSection.hidden = !v.sttEndpoint
+    if (v.sttEndpoint && endpointUrl && endpointModel) {
+      endpointUrl.value = v.sttEndpoint.url ?? ''
+      endpointModel.value = v.sttEndpoint.model ?? ''
+      if (endpointStatus) {
+        endpointStatus.textContent =
+          v.sttEndpoint.source === 'none'
+            ? t('settings.endpointNone')
+            : t(
+                v.sttEndpoint.source === 'env' ? 'settings.endpointEnv' : 'settings.endpointSaved',
+                { destination: v.sttEndpoint.destination },
+              )
+      }
+    }
   }
 
   /**
@@ -263,6 +384,73 @@ export async function wireSettingsPanel(api: SettingsApi): Promise<void> {
       await renderPreview()
     } catch (err) {
       fail(biasStatus, err)
+    }
+  })
+
+  el('screen-off-save')?.addEventListener('click', async () => {
+    if (!screenOffSeconds) return
+    // Validated here as well as at the server, because the server's answer to
+    // a bad number is a 400 whose message is for a machine. Emptiness first:
+    // Number('') is 0, which would silently save "never turn off".
+    const raw = screenOffSeconds.value.trim()
+    const seconds = Number(raw)
+    if (raw === '' || !Number.isInteger(seconds) || seconds < 0 || seconds > 3600) {
+      if (screenOffStatus) screenOffStatus.textContent = t('settings.screenOffInvalid')
+      return
+    }
+    try {
+      render(await api.put({ screenOffSeconds: seconds }))
+    } catch (err) {
+      fail(screenOffStatus, err)
+    }
+  })
+
+  provider?.addEventListener('change', async () => {
+    try {
+      render(await api.put({ sttProvider: provider.value as 'groq' | 'custom' }))
+      await renderPreview()
+    } catch (err) {
+      fail(destination, err)
+    }
+  })
+
+  fallback?.addEventListener('change', async () => {
+    try {
+      render(await api.put({ sttFallback: fallback.checked ? 'on' : 'off' }))
+    } catch (err) {
+      fail(destination, err)
+    }
+  })
+
+  el('stt-endpoint-save')?.addEventListener('click', async () => {
+    if (!endpointUrl || !endpointModel) return
+    const url = endpointUrl.value.trim()
+    // URL and model travel together: the model belongs to the URL it was
+    // written for.
+    try {
+      render(
+        await api.put({
+          sttEndpointUrl: url || null,
+          sttEndpointModel: endpointModel.value.trim() || null,
+        }),
+      )
+      await renderPreview()
+    } catch (err) {
+      fail(endpointStatus, err)
+    }
+  })
+
+  el('stt-endpoint-clear')?.addEventListener('click', async () => {
+    try {
+      render(
+        await api.put({
+          sttEndpointUrl: null,
+          sttEndpointModel: null,
+        }),
+      )
+      await renderPreview()
+    } catch (err) {
+      fail(endpointStatus, err)
     }
   })
 }
