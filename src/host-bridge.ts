@@ -77,6 +77,11 @@ export interface SettingsPatch {
   sttLang?: string | null
   sttBias?: 'on' | 'off' | null
   sttModel?: string | null
+  screenOffSeconds?: number | null
+  sttEndpointUrl?: string | null
+  sttEndpointModel?: string | null
+  sttProvider?: 'groq' | 'custom' | null
+  sttFallback?: 'on' | 'off' | null
 }
 
 /**
@@ -108,6 +113,29 @@ export interface GlassesSettingsView {
   sttModelSource?: 'setting' | 'default'
   /** Named by the server so this app need not hardcode them. */
   sttModels?: string[]
+  /**
+   * Seconds of ring silence before the glasses blank their panel; `0` = never.
+   *
+   * Optional for the same reason the model block is: a server from before the
+   * feature reports nothing, and the panel leaves the row out rather than
+   * offering a setting that server would drop.
+   */
+  screenOffSeconds?: number
+  screenOffSecondsSource?: 'setting' | 'default'
+  /** Where transcription goes when it is not Groq, and where that was decided.
+   *  Absent on a server from before the feature; the section hides with it. */
+  sttEndpoint?: {
+    url: string | null
+    model: string | null
+    /** Which transcriber speech goes to first. */
+    provider: 'groq' | 'custom'
+    providerSource: 'setting' | 'default'
+    /** Whether the other transcriber is the escape when the chosen one fails. */
+    fallback: boolean
+    source: 'setting' | 'env' | 'none'
+    /** Short name of the target that would be hit right now. */
+    destination: string
+  }
 }
 
 /**
