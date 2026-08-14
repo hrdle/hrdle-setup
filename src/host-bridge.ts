@@ -94,6 +94,9 @@ export interface SettingsPatch {
  */
 export interface GlassesSettingsView {
   hasApiKey: boolean
+  /** Whether the custom endpoint has its own key stored. Optional: a server
+   *  older than the two-key split reports nothing here. */
+  hasEndpointKey?: boolean
   apiKeySource: 'setting' | 'env' | 'none'
   sttLang: string
   sttLangSource: 'setting' | 'default'

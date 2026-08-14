@@ -140,6 +140,8 @@ export function settingsPanelHtml(): string {
         <input id="stt-endpoint-url" type="url" autocomplete="off" placeholder="https://..." style="${S.input}" />
         <label style="${S.label}" for="stt-endpoint-model">${t('settings.endpointModel')}</label>
         <input id="stt-endpoint-model" type="text" autocomplete="off" placeholder="whisper-1" style="${S.input}" />
+        <label style="${S.label}" for="stt-endpoint-key">${t('settings.endpointKey')}</label>
+        <input id="stt-endpoint-key" type="password" autocomplete="off" placeholder="${t('settings.endpointKeyPlaceholder')}" style="${S.input}" />
         <div style="${S.row}">
           <button type="button" id="stt-endpoint-save" style="${S.btn}">${t('settings.endpointSave')}</button>
           <button type="button" id="stt-endpoint-clear" style="${S.btnGhost}">${t('settings.endpointClear')}</button>
@@ -197,6 +199,7 @@ export interface SettingsApi {
     screenOffSeconds?: number | null
     sttEndpointUrl?: string | null
     sttEndpointModel?: string | null
+    sttEndpointKey?: string | null
     sttProvider?: 'groq' | 'custom' | null
     sttFallback?: 'on' | 'off' | null
   }): Promise<GlassesSettingsView>
@@ -227,6 +230,7 @@ export async function wireSettingsPanel(api: SettingsApi): Promise<void> {
   const fallback = el<HTMLInputElement>('stt-fallback')
   const endpointUrl = el<HTMLInputElement>('stt-endpoint-url')
   const endpointModel = el<HTMLInputElement>('stt-endpoint-model')
+  const endpointKey = el<HTMLInputElement>('stt-endpoint-key')
   const endpointStatus = el('stt-endpoint-status')
 
   // The last view, for the one thing the preview cannot say on its own: why it
@@ -302,6 +306,14 @@ export async function wireSettingsPanel(api: SettingsApi): Promise<void> {
     if (v.sttEndpoint && endpointUrl && endpointModel) {
       endpointUrl.value = v.sttEndpoint.url ?? ''
       endpointModel.value = v.sttEndpoint.model ?? ''
+      // Write-only, like the Groq one: the field says whether a key is stored
+      // and never what it is, so leaving it be must not clear the stored one.
+      if (endpointKey) {
+        endpointKey.value = ''
+        endpointKey.placeholder = v.hasEndpointKey
+          ? t('settings.endpointKeySet')
+          : t('settings.endpointKeyPlaceholder')
+      }
       if (endpointStatus) {
         endpointStatus.textContent =
           v.sttEndpoint.source === 'none'
@@ -434,10 +446,16 @@ export async function wireSettingsPanel(api: SettingsApi): Promise<void> {
     // URL and model travel together: the model belongs to the URL it was
     // written for.
     try {
+      const typedKey = endpointKey?.value.trim() ?? ''
       render(
         await api.put({
           sttEndpointUrl: url || null,
           sttEndpointModel: endpointModel.value.trim() || null,
+          // Empty means "leave what is stored", not "clear it" - the field is
+          // always empty on load, so the other reading would delete the key
+          // every time the URL was edited. Clearing the URL clears the key with
+          // it: it belonged to that endpoint.
+          sttEndpointKey: url ? (typedKey || undefined) : null,
         }),
       )
       await renderPreview()
